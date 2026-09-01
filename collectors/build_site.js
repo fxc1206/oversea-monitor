@@ -45,6 +45,33 @@ function main() {
     return n >= 6 ? 'global' : n >= 2 ? 'regional' : 'local';
   };
 
+  // ---- 品牌归一：把同一产品的跨国本地化名称合并成一个可读短名 ----
+  // App Store 里同一产品在不同市场名称完全不同（Pinterest / Pinterest: Lifestyle Ideas /
+  // Pinterest: Idées & Inspiration），直接按全名统计会把一个产品拆成多个。做法：
+  // 先取名称在第一个分隔符前的部分做短名，再用 seller（开发者）把该开发者名下的多个短名
+  // 收敛到它最高频的那个 —— seller 是同一法人的强信号，比字符串相似度稳。
+  const brandRaw = (name) => {
+    let b = String(name || '').split(/\s*[:：\-–—|｜(（\[]/)[0].trim();
+    if (!b) b = String(name || '').trim();
+    return b.length > 18 ? b.slice(0, 18) : b;
+  };
+  const sellerBrand = {};
+  for (const r of (R.mind_scored || mind.rows)) {
+    const t = (r.top5 || [])[0]; if (!t) continue;
+    const sl = r.top1_seller || '?', b = brandRaw(t);
+    (sellerBrand[sl] = sellerBrand[sl] || {})[b] = (sellerBrand[sl][b] || 0) + 1;
+  }
+  const canonMap = {};
+  for (const [sl, bs] of Object.entries(sellerBrand)) {
+    const top = Object.entries(bs).sort((a, b) => b[1] - a[1])[0][0];
+    for (const b of Object.keys(bs)) canonMap[sl + '||' + b] = top;
+  }
+  const brandOf = (name, seller) => {
+    if (!name) return '';
+    const b = brandRaw(name);
+    return canonMap[(seller || '?') + '||' + b] || b;
+  };
+
   // ---- 压缩内联数据：只留站点需要的字段，控制体积 ----
   const mindSlim = (R.mind_scored || mind.rows).map((r) => ({
     occ: r.occ || 'noise',
@@ -56,7 +83,34 @@ function main() {
     tm: r.term, q: r.signal_quality, sr: r.social_top_rank, sn: r.social_top_name,
     t1: (r.top5 || [])[0] || '', t2: (r.top5 || [])[1] || '', t3: (r.top5 || [])[2] || '',
     sl: r.top1_seller || '',
+    bd: brandOf((r.top5 || [])[0], r.top1_seller),
   }));
+
+  // ---- 产品视角聚合：每个占位方占了哪些心智、哪些市场 ----
+  // 只统计判定为 occupied / contested 的格子 —— unclaimed 的首位产品体量不足，
+  // 把它算成「占据」会严重高估。
+  const holderAgg = {};
+  for (const r of mindSlim) {
+    if (r.occ !== 'occupied' && r.occ !== 'contested') continue;
+    if (!r.bd) continue;
+    const h = (holderAgg[r.bd] = holderAgg[r.bd] || {
+      brand: r.bd, cells: 0, occupied: 0, contested: 0,
+      dims: {}, markets: {}, regions: {}, cls: r.cls, names: {},
+    });
+    h.cells++; h[r.occ]++;
+    h.dims[r.dcn] = (h.dims[r.dcn] || 0) + 1;
+    h.markets[r.mk] = (h.markets[r.mk] || 0) + 1;
+    h.regions[r.rg] = (h.regions[r.rg] || 0) + 1;
+    h.names[r.t1] = (h.names[r.t1] || 0) + 1;
+  }
+  const holders = Object.values(holderAgg).map((h) => ({
+    bd: h.brand, n: h.cells, oc: h.occupied, ct: h.contested,
+    cls: h.cls,
+    dn: Object.keys(h.dims).length, mn: Object.keys(h.markets).length,
+    dims: Object.entries(h.dims).sort((a, b) => b[1] - a[1]).map(([k, v]) => ({ d: k, n: v })),
+    mks: Object.entries(h.markets).sort((a, b) => b[1] - a[1]).map(([k]) => k),
+    rgs: Object.entries(h.regions).sort((a, b) => b[1] - a[1]).map(([k, v]) => ({ r: k, n: v })),
+  })).sort((a, b) => b.n - a.n || b.mn - a.mn);
   const metricSlim = metrics.rows.filter((r) => r.listed).map((r) => ({
     app: r.app, cn: r.app_cn, rg: r.region, cc: r.cc, mk: r.market,
     rc: r.rating_count, ra: r.rating_avg, v: r.version, vd: (r.version_release_date || '').slice(0, 10),
@@ -78,6 +132,7 @@ function main() {
       genres:p.genres.slice(0,5), names:p.names.slice(0,5), samples:p.desc_samples }; }),
     mind: mindSlim,
     metrics: metricSlim,
+    holders: holders,
   };
 
   const kpiSocialTotal = R.app_mindshare.reduce((s, a) => s + a.total_placements, 0);
@@ -156,6 +211,20 @@ td b{color:var(--ink);font-weight:600}
   font-size:10px;font-weight:600;color:#fff;cursor:default;transition:transform .1s}
 .cl:hover{transform:scale(1.22);position:relative;z-index:3;box-shadow:0 2px 8px rgba(0,0,0,.18)}
 .cl.e{background:var(--line);color:var(--ink3)}
+.cl.nm{width:84px;padding:0 4px;justify-content:flex-start}
+.cl.nm > span{display:block;width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+  font-size:9.5px;font-weight:600;letter-spacing:-.1px}
+.cl.nm:hover{transform:none;width:auto;min-width:84px;box-shadow:none}
+.cl.nm:hover > span{overflow:visible;text-overflow:clip}
+.mx.named{border-spacing:2px}
+.mx.named th{height:70px}
+.mx.named th.corner{height:70px}
+.mx3 .cl{width:30px}
+.mx3 th{height:70px}
+.mx3 th.corner{height:70px}
+.mx3 .hd{max-width:150px;overflow:hidden;text-overflow:ellipsis;font-weight:600;font-size:11px}
+.mx3 .tot{writing-mode:horizontal-tb;height:auto;padding:3px 6px;font-size:11px;color:var(--ink3);
+  text-align:center;font-weight:600;vertical-align:middle}
 .mx2 .cl{width:24px}
 .mx2 th{height:82px}
 .mx2 th.corner{height:82px}
@@ -238,6 +307,21 @@ ul.tight b{color:var(--ink)}
 <div class="card">
   <div class="scroll"><div id="mx2"></div></div>
   <div class="legend" id="lg2"></div>
+</div>
+
+<h2>谁占了什么 · 产品视角</h2>
+<p class="h2sub">把上面矩阵按产品重新聚合：每个占位方拿下了哪些心智、哪些市场</p>
+<div class="card">
+  <div class="ctrl">
+    <select id="h_scope">
+      <option value="all">全部占位方</option>
+      <option value="multi">跨 ≥3 市场的占位方</option>
+      <option value="social">仅社交/内容产品</option>
+    </select>
+    <input id="h_q" placeholder="搜产品名，如 Pinterest / Snapchat">
+  </div>
+  <div class="scroll"><div id="mx_h"></div></div>
+  <div class="legend" id="lg_h"></div>
 </div>
 
 <h2>竞品自我定位差异</h2>
@@ -377,10 +461,12 @@ function mk(id, opt){ try{ var el=document.getElementById(id); if(!el) return;
   });
 })();
 
+// 共享：心智维度序列与中文名（矩阵一 / 产品视角矩阵共用）
+var dims = D.dims.map(function(d){return d.dimension});
+var dimCn = {}; D.dims.forEach(function(d){ dimCn[d.dimension]=d.dimension_cn; });
+
 // 5. 矩阵一：需求入口归属
 (function(){
-  var dims = D.dims.map(function(d){return d.dimension});
-  var dimCn = {}; D.dims.forEach(function(d){ dimCn[d.dimension]=d.dimension_cn; });
   var box={}, regionOf={};
   D.mind.forEach(function(r){ if(!box[r.mk]){ box[r.mk]={}; regionOf[r.mk]=r.rg; } box[r.mk][r.dim]=r; });
   // 按区域分组排序：区域内按社交占位率降序，让同区域市场相邻，便于横向比较
@@ -414,7 +500,7 @@ function mk(id, opt){ try{ var el=document.getElementById(id); if(!el) return;
   function render(){
     var mode=sel.value, rg=selR.value;
     var list = order.filter(function(m){ return box[m] && (!rg || regionOf[m]===rg); });
-    var h='<table class="mx"><thead><tr><th class="corner">市场</th>';
+    var h='<table class="mx'+(mode==='occ'?' named':'')+'"><thead><tr><th class="corner">市场</th>';
     dims.forEach(function(d){ h+='<th>'+dimCn[d]+'</th>'; });
     h+='</tr></thead><tbody>';
     var curRg='';
@@ -427,7 +513,7 @@ function mk(id, opt){ try{ var el=document.getElementById(id); if(!el) return;
         if(!r){ tip+=' · 无数据'; }
         else if(mode==='occ'){
           var o=r.occ||'noise'; col=OCC[o].c;
-          txt = o==='occupied'?'占':o==='contested'?'争':'';
+          txt = (o==='occupied'||o==='contested') ? (r.bd||'') : '';
           tip += ' · '+OCC[o].t + (r.t1r!=null?' · 首位'+(r.t1r>=1000?(r.t1r/1000).toFixed(0)+'k':r.t1r)+'评分':'')
               + (r.sh!=null?' · 领先'+r.sh+'%':'') + (r.t1?' · '+r.t1:'');
         }
@@ -438,7 +524,9 @@ function mk(id, opt){ try{ var el=document.getElementById(id); if(!el) return;
           col=rankColor(r.sr); txt=r.sr||''; 
           tip+=' · '+(r.sr?'社交最高 #'+r.sr+(r.sn?' '+r.sn:''):'前10无社交产品');
         }
-        h+='<td><div class="cl'+(col?'':' e')+'" style="'+(col?'background:'+col:'')+'" title="'+tip.replace(/"/g,'')+'">'+txt+'</div></td>';
+        var isName = (mode==='occ' && txt.length>2);
+        h+='<td><div class="cl'+(col?'':' e')+(isName?' nm':'')+'" style="'+(col?'background:'+col:'')+'" title="'+tip.replace(/"/g,'')+'">'
+          + (isName?'<span>'+txt.replace(/</g,'&lt;')+'</span>':txt) + '</div></td>';
       });
       h+='</tr>';
     });
@@ -504,6 +592,44 @@ function mk(id, opt){ try{ var el=document.getElementById(id); if(!el) return;
     + '<span><i style="background:#1e40af"></i>≥25%</span><span><i style="background:#2563eb"></i>12-25%</span>'
     + '<span><i style="background:#4D7EFF"></i>6-12%</span><span><i style="background:#7B9CFF"></i>3-6%</span>'
     + '<span><i style="background:#a8bdff"></i>1-3%</span><span><i style="background:var(--line)"></i>未上架</span>';
+})();
+
+// 5b. 产品视角矩阵：产品 × 心智维度
+(function(){
+  var scope=document.getElementById('h_scope'), q=document.getElementById('h_q');
+  var SOCIAL=/instagram|tiktok|threads|snapchat|pinterest|reddit|x |twitter|bluesky|lemon8|bereal|facebook|line|kakao|wechat|weibo|discord|telegram|whatsapp|likee|kwai|youtube|douyin|rednote|xiaohongshu|小红书/i;
+  function render(){
+    var kw=(q.value||'').trim().toLowerCase(), sp=scope.value;
+    var list=D.holders.filter(function(h){
+      if(kw && h.bd.toLowerCase().indexOf(kw)<0) return false;
+      if(sp==='multi' && h.mn<3) return false;
+      if(sp==='social' && !SOCIAL.test(h.bd)) return false;
+      return true;
+    });
+    if(!list.length){ document.getElementById('mx_h').innerHTML='<div style="padding:20px;color:var(--ink3);font-size:13px">无匹配占位方</div>'; return; }
+    var cap = kw?list.length:Math.min(list.length,30);
+    list=list.slice(0,cap);
+    var h='<table class="mx mx3"><thead><tr><th class="corner">占位方</th>';
+    dims.forEach(function(d){ h+='<th>'+dimCn[d]+'</th>'; });
+    h+='<th class="tot">格数</th><th class="tot">市场</th></tr></thead><tbody>';
+    list.forEach(function(o){
+      var dmap={}; o.dims.forEach(function(x){ dmap[x.d]=x.n; });
+      h+='<tr><td class="mk hd" title="'+o.bd.replace(/"/g,'')+'">'+o.bd.replace(/</g,'&lt;')+'</td>';
+      dims.forEach(function(d){
+        var n=dmap[dimCn[d]]||0;
+        var col = n===0?'':n>=8?'#0f5f50':n>=4?'#1e7f6b':n>=2?'#3d9e88':'#8fc9bd';
+        var tip=o.bd+' · '+dimCn[d]+' · '+(n?n+' 个市场':'无占位');
+        h+='<td><div class="cl'+(col?'':' e')+'" style="'+(col?'background:'+col:'')+'" title="'+tip.replace(/"/g,'')+'">'+(n||'')+'</div></td>';
+      });
+      h+='<td class="tot">'+o.n+'</td><td class="tot">'+o.mn+'</td></tr>';
+    });
+    document.getElementById('mx_h').innerHTML=h+'</tbody></table>';
+    document.getElementById('lg_h').innerHTML=
+      '<span><i style="background:#8fc9bd"></i>1 个市场</span><span><i style="background:#3d9e88"></i>2-3 个</span>'
+      +'<span><i style="background:#1e7f6b"></i>4-7 个</span><span><i style="background:#0f5f50"></i>≥8 个</span>'
+      +'<span style="margin-left:6px;opacity:.7">共 '+D.holders.length+' 个占位方'+(cap<D.holders.length&&!kw?'，默认显示占位最多的 '+cap+' 个':'')+'</span>';
+  }
+  scope.onchange=render; q.oninput=render; render();
 })();
 
 // 5c. 竞品自我定位
