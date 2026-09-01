@@ -46,7 +46,11 @@ function main() {
   };
 
   // ---- 压缩内联数据：只留站点需要的字段，控制体积 ----
-  const mindSlim = mind.rows.map((r) => ({
+  const mindSlim = (R.mind_scored || mind.rows).map((r) => ({
+    occ: r.occ || 'noise',
+    rel: r.rel,
+    sh: r.share,
+    t1r: r.t1_ratings,
     cls: classify((r.top5 || [])[0]),
     rg: r.region, cc: r.cc, mk: r.market, dim: r.dimension, dcn: r.dimension_cn, gp: r.group,
     tm: r.term, q: r.signal_quality, sr: r.social_top_rank, sn: r.social_top_name,
@@ -69,6 +73,9 @@ function main() {
     regions: R.region_comparison,
     markets: R.supply_structure,
     momentum: R.rating_momentum,
+    positioning: (R.self_positioning || []).map(function(p){ return {
+      app:p.app, cn:p.app_cn, mk:p.markets, gv:p.genre_variants, nv:p.name_variants,
+      genres:p.genres.slice(0,5), names:p.names.slice(0,5), samples:p.desc_samples }; }),
     mind: mindSlim,
     metrics: metricSlim,
   };
@@ -209,12 +216,14 @@ ul.tight b{color:var(--ink)}
   <div class="card"><div id="c_regionbar" class="chart"></div></div>
 </div>
 
-<h2>需求入口归属矩阵</h2>
-<p class="h2sub">每格为该市场该维度的首位占位方类型 —— 判断进入时要正面对上谁</p>
+<h2>心智占据矩阵</h2>
+<p class="h2sub">每格回答一件事：这个市场的这个心智，是否已经有产品真的占住了</p>
+<div class="note"><b>怎么判定「占住」。</b>只看排名不够 —— App Store 搜索永远有第一名，但一个 3000 评分的小工具排第一和国民级产品排第一，含义完全不同。所以引入体量：<b>占住</b>＝首位产品体量高于该市场中位水平<b>且</b>领先优势 ≥45%；<b>争夺中</b>＝有大玩家但格局未定；<b>未见强占位</b>＝首位体量低于本市场中位水平。<br><b>关键：「未见强占位」不等于「空位」。</b>搜索排名由商店文案关键词匹配度主导，Pinterest 实际占着美国「找灵感」心智，但它的商店描述不写 inspiration ideas，因此会被判为未见强占位。这个误报方向偏危险（让人以为有空位、进去撞上巨头），所以刻意不叫空位 —— 要当空位用，必须先做定性验证。</div>
 <div class="card">
   <div class="ctrl">
     <select id="m1_mode">
-      <option value="type">显示：占位方类型</option>
+      <option value="occ">显示：心智占据强度</option>
+      <option value="type">显示：占位方类型（本土/国际/社交）</option>
       <option value="social">显示：社交产品最高排名</option>
     </select>
     <select id="m1_region"><option value="">全部区域</option></select>
@@ -229,6 +238,15 @@ ul.tight b{color:var(--ink)}
 <div class="card">
   <div class="scroll"><div id="mx2"></div></div>
   <div class="legend" id="lg2"></div>
+</div>
+
+<h2>竞品自我定位差异</h2>
+<p class="h2sub">同一个竞品在不同国家把自己描述成什么 —— 这是它自己做过本地化测试后的结论，比第三方推测可信</p>
+<div class="note info">仅统计 bundleId 校验通过的记录。同名 App 会严重污染这类分析：实测 Lemon8 曾在 16 国被匹配成同名聊天应用、墨西哥被匹配成 TikTok，已改用 bundleId 锚定正主。</div>
+<div class="card">
+  <div class="ctrl"><select id="p_app"></select></div>
+  <div id="pos_genre" style="margin-bottom:14px"></div>
+  <div id="pos_desc"></div>
 </div>
 
 <h2>明细数据</h2>
@@ -378,6 +396,12 @@ function mk(id, opt){ try{ var el=document.getElementById(id); if(!el) return;
   var regions=[]; D.markets.forEach(function(m){ if(regions.indexOf(m.region)<0) regions.push(m.region); });
   regions.forEach(function(r){ selR.innerHTML += '<option>'+r+'</option>'; });
 
+  var OCC = {
+    occupied: {c:'#1e7f6b', t:'占住', d:'大体量且领先 ≥45%'},
+    contested:{c:'#F0A500', t:'争夺', d:'有大玩家但格局未定'},
+    unclaimed:{c:'', t:'未见强占位', d:'首位低于本市场中位水平'},
+    noise:    {c:'', t:'信号不可用', d:'词匹配质量差'}
+  };
   var TYPE = {
     local:   {c:'#0d9488', t:'本土专属', d:'仅 1 国出现，本地玩家'},
     regional:{c:'#4D7EFF', t:'区域玩家', d:'2-5 国出现'},
@@ -401,6 +425,12 @@ function mk(id, opt){ try{ var el=document.getElementById(id); if(!el) return;
       dims.forEach(function(d){
         var r=box[m][d], col='', txt='', tip=m+' · '+dimCn[d];
         if(!r){ tip+=' · 无数据'; }
+        else if(mode==='occ'){
+          var o=r.occ||'noise'; col=OCC[o].c;
+          txt = o==='occupied'?'占':o==='contested'?'争':'';
+          tip += ' · '+OCC[o].t + (r.t1r!=null?' · 首位'+(r.t1r>=1000?(r.t1r/1000).toFixed(0)+'k':r.t1r)+'评分':'')
+              + (r.sh!=null?' · 领先'+r.sh+'%':'') + (r.t1?' · '+r.t1:'');
+        }
         else if(mode==='type'){
           var t=r.cls||'none'; col=TYPE[t].c; txt=t==='none'?'':TYPE[t].t.charAt(0);
           tip+=' · '+TYPE[t].t+(r.t1?' · '+r.t1:'');
@@ -413,7 +443,12 @@ function mk(id, opt){ try{ var el=document.getElementById(id); if(!el) return;
       h+='</tr>';
     });
     document.getElementById('mx1').innerHTML=h+'</tbody></table>';
-    if(mode==='type'){
+    if(mode==='occ'){
+      lg.innerHTML = ['occupied','contested'].map(function(k){
+        return '<span><i style="background:'+OCC[k].c+'"></i>'+OCC[k].t+'　<span style="opacity:.65">'+OCC[k].d+'</span></span>'; }).join('')
+        + '<span><i style="background:var(--line)"></i>未见强占位　<span style="opacity:.65">不等于空位，见上方说明</span></span>';
+    }
+    else if(mode==='type'){
       lg.innerHTML = ['local','regional','global','social'].map(function(k){
         return '<span><i style="background:'+TYPE[k].c+'"></i>'+TYPE[k].t+'　<span style="opacity:.65">'+TYPE[k].d+'</span></span>'; }).join('')
         + '<span><i style="background:var(--line)"></i>无有效结果</span>';
@@ -469,6 +504,39 @@ function mk(id, opt){ try{ var el=document.getElementById(id); if(!el) return;
     + '<span><i style="background:#1e40af"></i>≥25%</span><span><i style="background:#2563eb"></i>12-25%</span>'
     + '<span><i style="background:#4D7EFF"></i>6-12%</span><span><i style="background:#7B9CFF"></i>3-6%</span>'
     + '<span><i style="background:#a8bdff"></i>1-3%</span><span><i style="background:var(--line)"></i>未上架</span>';
+})();
+
+// 5c. 竞品自我定位
+(function(){
+  var sel=document.getElementById('p_app');
+  if(!D.positioning || !D.positioning.length){ 
+    document.getElementById('pos_genre').innerHTML='<div style="color:var(--ink3);font-size:13px">暂无数据</div>'; return; }
+  D.positioning.forEach(function(p,i){ sel.innerHTML += '<option value="'+i+'">'+p.cn+'（'+p.mk+' 国 · '+p.gv+' 种品类定位 · '+p.nv+' 种本地化名称）</option>'; });
+  function render(){
+    var p=D.positioning[sel.value|0];
+    var g='<table style="width:100%"><thead><tr><th>商店品类</th><th>市场数</th><th>代表市场</th></tr></thead><tbody>';
+    p.genres.forEach(function(x){
+      g+='<tr><td><b>'+x.genre+'</b></td><td>'+x.count+'</td><td style="color:var(--ink3)">'+x.markets.join('、')+'</td></tr>';
+    });
+    g+='</tbody></table>';
+    if(p.names.length>1){
+      g+='<div style="margin-top:12px;font-size:12.5px;color:var(--ink2)"><b>本地化名称差异：</b><ul class="tight" style="margin-top:5px">';
+      p.names.forEach(function(n){ g+='<li>'+(n.name||'—')+'　<span style="color:var(--ink3)">'+n.count+' 国：'+n.markets.join('、')+'</span></li>'; });
+      g+='</ul></div>';
+    }
+    document.getElementById('pos_genre').innerHTML=g;
+    var d='';
+    if(p.samples && p.samples.length){
+      d='<div style="font-size:12.5px;color:var(--ink3);margin-bottom:8px">各市场商店描述开头（体现它想让当地用户把它当什么）</div>';
+      p.samples.forEach(function(x){
+        d+='<div style="border-left:3px solid var(--primary);padding:8px 12px;margin-bottom:8px;background:rgba(77,126,255,.05);border-radius:0 6px 6px 0">'
+         + '<div style="font-size:12px;color:var(--ink2)"><b>'+x.market+'</b>　'+(x.local_name||'')+'　<span class="pill p-blue">'+(x.genre||'')+'</span></div>'
+         + '<div style="font-size:12.5px;color:var(--ink2);margin-top:4px;line-height:1.55">'+(x.desc||'').replace(/</g,'&lt;')+'…</div></div>';
+      });
+    }
+    document.getElementById('pos_desc').innerHTML=d;
+  }
+  sel.onchange=render; render();
 })();
 
 // 6. 市场明细表

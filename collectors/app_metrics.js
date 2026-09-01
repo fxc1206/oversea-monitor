@@ -70,26 +70,40 @@ async function resolveIds(countries, apps, force) {
         resolved++;
         continue;
       }
-      const url = `https://itunes.apple.com/search?term=${encodeURIComponent(a.search_term)}&country=${m.cc}&entity=software&limit=5`;
+      const url = `https://itunes.apple.com/search?term=${encodeURIComponent(a.search_term)}&country=${m.cc}&entity=software&limit=10`;
       try {
         const j = await C.fetchJSON(url, { label: `resolve:${a.key}:${m.cc}` });
         const cands = j.results || [];
-        // 优先按 seller_hint 匹配正主，避免抓到山寨
-        let pick = a.seller_hint
-          ? cands.find((r) => (r.sellerName || '').toLowerCase().includes(a.seller_hint.toLowerCase()))
-          : null;
-        if (!pick) pick = cands[0];
+        // bundleId 是全球唯一锚点，优先用它 —— 仅靠 seller_hint 会大量误匹配
+        // （实测 Lemon8 在 16 国匹配成同名聊天 App，墨西哥匹配成 TikTok）
+        let pick = null, how = null;
+        if (a.bundle_id) {
+          pick = cands.find((r) => r.bundleId === a.bundle_id);
+          if (pick) how = 'bundle';
+        }
+        if (!pick && a.seller_hint) {
+          pick = cands.find((r) => (r.sellerName || '').toLowerCase().includes(a.seller_hint.toLowerCase()));
+          if (pick) how = 'seller';
+        }
+        // 没有 bundleId 锚点的 App（如小红书海外版）才退到首位结果，并标记为未校验
+        if (!pick && !a.bundle_id && !a.seller_hint) {
+          pick = cands[0];
+          if (pick) how = 'unverified';
+        }
         if (pick) {
           map[a.key][m.cc] = {
             id: pick.trackId,
             name: pick.trackName,
             seller: pick.sellerName,
+            bundleId: pick.bundleId,
             source: 'search',
-            verified: a.seller_hint ? (pick.sellerName || '').toLowerCase().includes(a.seller_hint.toLowerCase()) : null,
+            matched_by: how,
+            verified: how === 'bundle',
           };
           resolved++;
         } else {
-          map[a.key][m.cc] = null; // 该国确实未上架
+          // 有锚点却匹配不上 = 该国确实未上架正主，不接受错误的同名 App
+          map[a.key][m.cc] = null;
           missing++;
         }
       } catch (e) {
