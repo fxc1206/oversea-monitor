@@ -29,6 +29,9 @@ const APPS = require('../config/apps.json');
 
 // 与心智维度对得上的分类（不做全量分类，只取与本项目相关的）
 const GENRES = {
+  // genre=0 是总榜（URL 不带 genre 参数）。总榜是唯一可跨品类比较的口径：
+  // 分类榜里「社交榜第1」和「新闻榜第1」不可比，但总榜第12 vs 第30 是同一把尺子。
+  0: { cn: '总榜', dims: [] },
   6005: { cn: '社交', dims: ['chat_friends', 'dating', 'local_community'] },
   6009: { cn: '新闻', dims: ['news_public'] },
   6008: { cn: '照片视频', dims: ['short_video', 'share_photos'] },
@@ -144,7 +147,9 @@ const SOCIAL_RE = new RegExp(APPS.social_regex, 'i');
 
   for (const m of markets) {
     for (const [g, meta] of genres) {
-      const url = `https://itunes.apple.com/${m.cc}/rss/${kind}/limit=${limit}/genre=${g}/json`;
+      const url = String(g) === '0'
+        ? `https://itunes.apple.com/${m.cc}/rss/${kind}/limit=${limit}/json`
+        : `https://itunes.apple.com/${m.cc}/rss/${kind}/limit=${limit}/genre=${g}/json`;
       let json;
       try {
         json = await C.fetchJSON(url, { label: `chart:${m.cc}:${g}` });

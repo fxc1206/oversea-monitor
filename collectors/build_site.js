@@ -225,6 +225,8 @@ function main() {
     chartCells: R.chart_momentum ? R.chart_momentum.comp_cells : [],
     chartGenres: R.chart_momentum ? R.chart_momentum.genres : [],
     crossLayer: R.cross_layer || [],
+    trend: R.chart_trend || { dates: [], days: 0, series: [], movers: [] },
+    snapDays: R.snapshot_days || {},
   };
 
   const kpiSocialTotal = R.app_mindshare.reduce((s, a) => s + a.total_placements, 0);
@@ -447,6 +449,12 @@ ul.tight b{color:var(--ink)}
   <div class="scroll"><div id="tblx"></div></div>
 </div>
 
+<h2>数据存档 · 趋势积累</h2>
+<p class="h2sub">每天采集的数据按日期存档，不覆盖历史 —— 天数够了就能看出谁在涨、谁在掉</p>
+<div class="card">
+  <div id="arch"></div>
+</div>
+
 <h2>竞品市场重心矩阵</h2>
 <p class="h2sub">每格为该竞品评分数在该市场的占比（按竞品自身全球总量归一化）—— 深色即其用户盘所在</p>
 <div class="note info" style="margin:0 0 14px">刻意<b>按每个竞品自身归一化</b>，不做跨竞品绝对值对比：评分转化率在不同产品间差异巨大，横向比绝对值会得出错误结论。同一行内可比，跨行只看形态不看深浅。</div>
@@ -523,7 +531,8 @@ ul.tight b{color:var(--ink)}
     <li><b>同一 App 跨国 ID 不同。</b>TikTok 美区 835599320、日本/印尼 1235601864。用错 ID 会返回「无上架」——数据错了但不报错，是最危险的失败模式。采集器已强制按国家解析并校验正主。</li>
     <li><b>DAU 与播放量无公开一手源。</b>Threads 与 Instagram 均不公开分国家日活，第三方数字皆为模型推算。本看板刻意不含这两项，避免用排名替代量级做判断。</li>
     <li><b>榜位不是市场份额，且跨国不可比。</b>免费榜排序反映近期下载速度，受买量投放影响大；各国大盘体量差几个数量级，「巴西第 1 名」与「美国第 1 名」的绝对下载量不可等同。同一行内看地域强弱差异有意义，跨行比数字没有意义。</li>
-    <li><b>每个 App 只归一个主分类。</b>X 与 Reddit 归在新闻榜、TikTok 归在娱乐榜、Pinterest 归在生活榜 —— 所以榜位反映的是「在自己所属分类内的位置」，不是全类目位置。跨分类比较需谨慎。</li>
+    <li><b>每个 App 只归一个主分类。</b>X 与 Reddit 归在新闻榜、TikTok 归在娱乐榜、Pinterest 归在生活榜 —— 所以分类榜位反映的是「在自己所属分类内的位置」，跨分类比数字没有意义。<b>要跨品类比较请看总榜中位名次</b>（存档区表格最后一列），那是唯一同尺度的口径。</li>
+    <li><b>快照永不覆盖，同日重跑自动去重。</b>数据按日期分文件追加写（<code>data/snapshots/{dataset}/{date}.jsonl</code>），历史不会丢。同一天重复采集会产生重复行，读取时按业务主键保留最后一次 —— 否则同一格会被算两次，是静默的数据污染。</li>
     <li><b>竞品识别以 trackId 为准。</b>名称匹配只作兜底且必须严格：宽松前缀会把 Xiaomi/XBOX 认成 X、把 TikTok Studio（创作者后台）认成 TikTok，导致覆盖度虚高。曾因此让 X 虚报 131 次上榜。</li>
     <li><b>本数据只是雷达。</b>发现异动后仍需 Reddit 讨论、用户调研等定性证据确认心智归属。</li>
   </ul>
@@ -918,13 +927,14 @@ var dims=[], dimGroup={}, groupFirst={}, groupSpan=[];
     selR.dataset.filled='1';
   }
 
+  // 单色蓝阶：同一色相靠明度表达强弱，比多色系更像"连续量"而不是"分类"
   function rankColor(r){
     if(r==null) return '';
-    if(r<=3)  return '#0b7a5d';
-    if(r<=10) return '#2f9e79';
-    if(r<=30) return '#7cb8a3';
-    if(r<=60) return '#b9d4c9';
-    return '#e3ece8';
+    if(r<=3)  return '#2b4a8f';
+    if(r<=10) return '#4d7ecc';
+    if(r<=30) return '#8fadde';
+    if(r<=60) return '#c3d3ee';
+    return '#e6ecf7';
   }
 
   function render(){
@@ -963,7 +973,7 @@ var dims=[], dimGroup={}, groupFirst={}, groupSpan=[];
         if(!v){ h+='<td class="'+sep.trim()+'"><div class="cl e"></div></td>'; return; }
         var col=rankColor(v.rank);
         var tip=app+' · '+mkName[cc]+'\\n第 '+v.rank+' 名（'+v.genre+'榜）';
-        h+='<td class="'+sep.trim()+'"><div class="cl" style="background:'+col+';color:'+(v.rank<=30?'#fff':'var(--ink2)')+'" title="'+tip.replace(/"/g,'&quot;')+'">'+v.rank+'</div></td>';
+        h+='<td class="'+sep.trim()+'"><div class="cl" style="background:'+col+';color:'+(v.rank<=30?'#fff':'#41506e')+'" title="'+tip.replace(/"/g,'&quot;')+'">'+v.rank+'</div></td>';
       });
       h+='</tr>';
     });
@@ -973,7 +983,7 @@ var dims=[], dimGroup={}, groupFirst={}, groupSpan=[];
     // 图例带覆盖统计
     var tot=0, t10=0;
     ccs.forEach(function(cc){ aseq.forEach(function(a){ var v=box[a+'|'+cc]; if(v){tot++; if(v.rank<=10)t10++;} }); });
-    lg.innerHTML=[['#0b7a5d','前3名'],['#2f9e79','4-10名'],['#7cb8a3','11-30名'],['#b9d4c9','31-60名'],['#e3ece8','61名以后']]
+    lg.innerHTML=[['#2b4a8f','前3名'],['#4d7ecc','4-10名'],['#8fadde','11-30名'],['#c3d3ee','31-60名'],['#e6ecf7','61名以后']]
       .map(function(x){return '<span class="li"><i style="background:'+x[0]+'"></i>'+x[1]+'</span>'}).join('')
       + '<span class="lnote">当前视图 '+tot+' 个上榜位，其中 '+t10+' 个进前 10　空白＝该分类前 100 名内没有它</span>';
   }
@@ -1004,6 +1014,56 @@ var dims=[], dimGroup={}, groupFirst={}, groupSpan=[];
      + '<td>'+r.mind_cells+'</td></tr>';
   });
   h+='</tbody></table>';
+  host.innerHTML=h;
+})();
+
+// 5f. 存档状态与趋势
+(function(){
+  var host=document.getElementById('arch');
+  if(!host) return;
+  var t=D.trend||{}, sd=D.snapDays||{};
+  var names={charts:'榜单动能', mindshare:'需求词搜索', app_metrics:'竞品指标'};
+
+  var h='<div class="grid2" style="margin-bottom:4px">';
+  ['charts','mindshare','app_metrics'].forEach(function(k){
+    var ds=sd[k]||[];
+    h+='<div style="padding:12px 14px;background:rgba(127,140,180,.05);border-radius:8px">'
+     + '<div style="font-size:12px;color:var(--ink3)">'+names[k]+'</div>'
+     + '<div style="font-size:22px;font-weight:600;color:var(--ink);margin:2px 0">'+ds.length+' <span style="font-size:12px;font-weight:400;color:var(--ink3)">天存档</span></div>'
+     + '<div style="font-size:11.5px;color:var(--ink3)">'+(ds.length?ds[0]+(ds.length>1?' → '+ds[ds.length-1]:''):'无')+'</div></div>';
+  });
+  h+='</div>';
+
+  if(!t.days || t.days<2){
+    h+='<div class="note warn" style="margin:14px 0 0"><b>趋势还看不了，需要至少 2 天快照。</b>'
+     + '目前榜单只有 '+(t.days||0)+' 天数据（'+((t.dates||[]).join(', ')||'无')+'）。'
+     + '每天跑一次 <code>node collectors/charts.js --limit 100</code>，明天这里就会出现「谁在涨、谁在掉」的变动榜。'
+     + '<br>存档机制已就位：按日期分文件追加写，<b>永不覆盖历史</b>；同日重跑会自动去重，不会把同一格算两次。</div>';
+    // 当日基线表：让用户知道明天要跟谁比
+    h+='<div style="font-size:12.5px;color:var(--ink3);margin:16px 0 8px">当日基线（明天起可对比）　总榜中位名次是唯一可跨品类比较的口径</div>';
+    h+='<div class="scroll"><table><thead><tr><th>竞品</th><th>覆盖榜位</th><th>进前10</th><th>分类榜中位</th><th>总榜中位</th></tr></thead><tbody>';
+    (t.series||[]).slice().sort(function(a,b){
+      var av=a.overall_median==null?999:a.overall_median, bv=b.overall_median==null?999:b.overall_median;
+      return av-bv;
+    }).forEach(function(s){
+      h+='<tr><td><b>'+s.app+'</b></td><td>'+s.markets+'</td><td>'+s.top10+'</td>'
+       + '<td>第 '+s.median_rank+' 名</td>'
+       + '<td>'+(s.overall_median==null?'<span style="color:var(--ink3)">未进总榜</span>':'第 '+s.overall_median+' 名')+'</td></tr>';
+    });
+    h+='</tbody></table></div>';
+  } else {
+    // 变动榜
+    var mv=t.movers||[];
+    h+='<div style="font-size:12.5px;color:var(--ink3);margin:16px 0 8px">最近一日变动最大的榜位（'+t.dates[t.dates.length-2]+' → '+t.dates[t.dates.length-1]+'）</div>';
+    h+='<div class="scroll"><table><thead><tr><th>竞品</th><th>市场</th><th>榜单</th><th>变化</th><th>当前</th></tr></thead><tbody>';
+    mv.forEach(function(m){
+      var up=m.delta>0;
+      h+='<tr><td><b>'+m.app+'</b></td><td>'+m.market+'</td><td>'+m.genre_cn+'</td>'
+       + '<td style="color:'+(up?'#0b7a5d':'#c8442e')+';font-weight:600">'+(up?'↑ 前进 ':'↓ 后退 ')+Math.abs(m.delta)+' 名</td>'
+       + '<td>第 '+m.from+' → '+m.to+' 名</td></tr>';
+    });
+    h+='</tbody></table></div>';
+  }
   host.innerHTML=h;
 })();
 
