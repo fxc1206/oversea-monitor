@@ -59,8 +59,12 @@ async function main() {
   const limit = Number(argv('limit', 10));
   const countries = targetCountries();
   const dims = targetDimensions();
-  const total = countries.length * dims.length;
-  C.log(`心智扫描启动: ${countries.length} 国 × ${dims.length} 维度 = ${total} 次查询, limit=${limit}`);
+  // 词层：narrow=需求场景词（谁在抢这个具体场景），broad=品类宽词（品类货架头部是谁）
+  // 实测两层结果几乎不重叠：美国搜 ideas 首位 Pinterest，搜 inspiration ideas 前5无 Pinterest。
+  const layerArg = argv('layer', 'both');
+  const layers = layerArg === 'both' ? ['narrow', 'broad'] : [layerArg];
+  const total = countries.length * dims.length * layers.length;
+  C.log(`心智扫描启动: ${countries.length} 国 × ${dims.length} 维度 × ${layers.length} 词层 = ${total} 次查询, limit=${limit}`);
 
   const rows = [];
   const failures = [];
@@ -69,11 +73,13 @@ async function main() {
   for (const m of countries) {
     const lang = termsCfg.lang_by_cc[m.cc] || 'en';
     for (const d of dims) {
-      const term = d.terms[lang] || d.terms.en;
+     for (const layer of layers) {
+      const bank = layer === 'broad' ? (d.broad_terms || d.terms) : d.terms;
+      const term = bank[lang] || bank.en;
       done++;
       const url = `https://itunes.apple.com/search?term=${encodeURIComponent(term)}&country=${m.cc}&entity=software&limit=${limit}`;
       try {
-        const j = await C.fetchJSON(url, { label: `mind:${m.cc}:${d.dimension}` });
+        const j = await C.fetchJSON(url, { label: `mind:${m.cc}:${d.dimension}:${layer}` });
         const results = (j.results || []).map((r, i) => ({
           rank: i + 1,
           name: r.trackName,
@@ -92,6 +98,7 @@ async function main() {
           dimension: d.dimension,
           group: d.group,
           dimension_cn: d.cn,
+          layer,
           term,
           resultCount: results.length,
           top5: results.slice(0, 5).map((r) => r.name),
@@ -107,9 +114,10 @@ async function main() {
           C.log(`  进度 ${done}/${total} | req=${C.stats.requests} cache=${C.stats.fromCache} blocked=${C.stats.blocked} err=${C.stats.errors}`);
         }
       } catch (e) {
-        failures.push({ cc: m.cc, dimension: d.dimension, term, error: e.message });
-        C.log(`  ✗ ${m.cc}/${d.dimension} 失败: ${e.message}`);
+        failures.push({ cc: m.cc, dimension: d.dimension, layer, term, error: e.message });
+        C.log(`  ✗ ${m.cc}/${d.dimension}/${layer} 失败: ${e.message}`);
       }
+     }
     }
   }
 
