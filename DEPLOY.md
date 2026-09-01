@@ -35,6 +35,7 @@ git push -u origin main
 
 ```bash
 node collectors/mindshare.js --limit 10
+node collectors/charts.js --limit 100
 node collectors/app_metrics.js
 node collectors/report.js
 node collectors/build_site.js

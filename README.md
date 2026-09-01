@@ -21,6 +21,9 @@ node collectors/mindshare.js --limit 10
 # 竞品指标采集（11 App × 39 国，首次会解析各国 App ID）
 node collectors/app_metrics.js
 
+# 3. 榜单动能（分类免费榜榜位，39国×9分类，约6分钟）
+node collectors/charts.js --limit 100
+
 # 生成报告（读本地快照，不发网络请求）
 node collectors/report.js
 
@@ -49,6 +52,7 @@ oversea-monitor/
 ├── collectors/
 │   ├── mindshare.js            # 心智占位扫描
 │   ├── app_metrics.js          # 竞品指标 + 跨国 ID 解析
+│   ├── charts.js               # 榜单动能（分类免费榜榜位）
 │   ├── report.js               # Markdown 报告 + CSV
 │   └── build_site.js           # 静态看板构建
 ├── docs/                       # GitHub Pages 根目录
@@ -154,7 +158,7 @@ curl -sL "https://rss.applemarketingtools.com/api/v2/us/apps/top-free/50/apps.js
   <array>
     <string>/bin/bash</string>
     <string>-lc</string>
-    <string>cd /ABSOLUTE/PATH/oversea-monitor && node collectors/mindshare.js --limit 10 && node collectors/app_metrics.js && node collectors/report.js</string>
+    <string>cd /ABSOLUTE/PATH/oversea-monitor && node collectors/mindshare.js --limit 10 && node collectors/app_metrics.js && node collectors/charts.js --limit 100 && node collectors/report.js</string>
   </array>
   <key>StartCalendarInterval</key>
   <dict><key>Hour</key><integer>9</integer><key>Minute</key><integer>0</integer></dict>
@@ -171,7 +175,7 @@ launchctl load ~/Library/LaunchAgents/com.oversea.monitor.plist
 ### 或 cron
 
 ```
-0 9 * * * cd /ABSOLUTE/PATH/oversea-monitor && node collectors/mindshare.js --limit 10 && node collectors/app_metrics.js && node collectors/report.js >> /tmp/oversea-monitor.log 2>&1
+0 9 * * * cd /ABSOLUTE/PATH/oversea-monitor && node collectors/mindshare.js --limit 10 && node collectors/app_metrics.js && node collectors/charts.js --limit 100 && node collectors/report.js >> /tmp/oversea-monitor.log 2>&1
 ```
 
 ---

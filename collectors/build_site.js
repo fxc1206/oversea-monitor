@@ -219,6 +219,12 @@ function main() {
     brandLegendBroad: cBroad.lg,
     holdersBroad: holdersBroad,
     minorColor: MINOR_COLOR,
+    // 榜单动能层（下载动能，与搜索词货架互补）
+    charts_date: R.charts_date || null,
+    chartApps: R.chart_momentum ? R.chart_momentum.apps : [],
+    chartCells: R.chart_momentum ? R.chart_momentum.comp_cells : [],
+    chartGenres: R.chart_momentum ? R.chart_momentum.genres : [],
+    crossLayer: R.cross_layer || [],
   };
 
   const kpiSocialTotal = R.app_mindshare.reduce((s, a) => s + a.total_placements, 0);
@@ -421,6 +427,26 @@ ul.tight b{color:var(--ink)}
   <div class="legend" id="lg1"></div>
 </div>
 
+<h2>下载动能 · 竞品榜位</h2>
+<p class="h2sub">App Store 分类免费榜实时榜位，${DATA.chartApps.length} 个竞品 × 39 国 × 9 个分类</p>
+<div class="note src"><b>这是另一套证据，和上面那张表问的不是同一个问题。</b>上表问「搜需求词会撞见谁」（货架争夺，靠商店文案关键词），这里问「谁真的在被下载」（下载动能，靠品牌力和买量）。<br>
+<b>不是市场份额也不是装机量</b>，是近期下载速度的排序；各国大盘体量不同，<b>跨国不可直接比榜位</b>。</div>
+<div class="card">
+  <div class="ctrl">
+    <select id="c_region"><option value="">全部区域</option></select>
+    <span class="ctrlhint">格内数字＝榜位，越小越靠前</span>
+  </div>
+  <div class="scroll"><div id="mxc"></div></div>
+  <div class="legend" id="lgc"></div>
+</div>
+
+<h2>两层证据对照 · 谁靠品牌、谁靠关键词</h2>
+<p class="h2sub">把「下载动能」和「货架占位」并排看，落差本身就是结论</p>
+<div class="note warn"><b>只看一层一定会看错。</b>Threads 在搜索词矩阵 624 格里占位为 0，但在 38 国社交榜前 10 —— 它不做 ASO，用户直接搜品牌名。反过来，一堆 ASO 型小工具占满货架却进不了榜单前 100。</div>
+<div class="card">
+  <div class="scroll"><div id="tblx"></div></div>
+</div>
+
 <h2>竞品市场重心矩阵</h2>
 <p class="h2sub">每格为该竞品评分数在该市场的占比（按竞品自身全球总量归一化）—— 深色即其用户盘所在</p>
 <div class="note info" style="margin:0 0 14px">刻意<b>按每个竞品自身归一化</b>，不做跨竞品绝对值对比：评分转化率在不同产品间差异巨大，横向比绝对值会得出错误结论。同一行内可比，跨行只看形态不看深浅。</div>
@@ -496,6 +522,9 @@ ul.tight b{color:var(--ink)}
     <li><b>部分语言需求词匹配质量差。</b>泰语「ร้านอาหาร」(餐厅) 会搜出 My Hot Pot Story 等游戏。低质格子已标记 <span class="pill p-low">low</span>，判读时应剔除。</li>
     <li><b>同一 App 跨国 ID 不同。</b>TikTok 美区 835599320、日本/印尼 1235601864。用错 ID 会返回「无上架」——数据错了但不报错，是最危险的失败模式。采集器已强制按国家解析并校验正主。</li>
     <li><b>DAU 与播放量无公开一手源。</b>Threads 与 Instagram 均不公开分国家日活，第三方数字皆为模型推算。本看板刻意不含这两项，避免用排名替代量级做判断。</li>
+    <li><b>榜位不是市场份额，且跨国不可比。</b>免费榜排序反映近期下载速度，受买量投放影响大；各国大盘体量差几个数量级，「巴西第 1 名」与「美国第 1 名」的绝对下载量不可等同。同一行内看地域强弱差异有意义，跨行比数字没有意义。</li>
+    <li><b>每个 App 只归一个主分类。</b>X 与 Reddit 归在新闻榜、TikTok 归在娱乐榜、Pinterest 归在生活榜 —— 所以榜位反映的是「在自己所属分类内的位置」，不是全类目位置。跨分类比较需谨慎。</li>
+    <li><b>竞品识别以 trackId 为准。</b>名称匹配只作兜底且必须严格：宽松前缀会把 Xiaomi/XBOX 认成 X、把 TikTok Studio（创作者后台）认成 TikTok，导致覆盖度虚高。曾因此让 X 虚报 131 次上榜。</li>
     <li><b>本数据只是雷达。</b>发现异动后仍需 Reddit 讨论、用户调研等定性证据确认心智归属。</li>
   </ul>
 </div>
@@ -861,6 +890,121 @@ var dims=[], dimGroup={}, groupFirst={}, groupSpan=[];
     document.getElementById('pos_desc').innerHTML=d;
   }
   sel.onchange=render; render();
+})();
+
+// 5d. 榜单动能矩阵：竞品 × 市场，格内为榜位（每个 App 只归一个主分类，
+//     所以按分类排会极稀疏；按市场排才能看出地域分布差异）
+(function(){
+  var host=document.getElementById('mxc'), lg=document.getElementById('lgc'), selR=document.getElementById('c_region');
+  if(!host) return;
+  if(!D.chartCells || !D.chartCells.length){ host.innerHTML='<div class="empty">暂无榜单数据，运行 collectors/charts.js 后重建</div>'; return; }
+
+  // 竞品 × 市场 -> 最佳榜位
+  var box={}, mkName={}, mkRegion={};
+  D.chartCells.forEach(function(c){
+    var k=c.app+'|'+c.cc;
+    if(box[k]==null || c.rank<box[k].rank) box[k]={rank:c.rank, genre:c.genre_cn};
+    mkName[c.cc]=c.market; mkRegion[c.cc]=c.region;
+  });
+
+  var aseq=D.chartApps.map(function(a){return a.app});
+
+  // 区域筛选器
+  var regions=[]; var rseen={};
+  (D.regions||[]).forEach(function(r){ if(!rseen[r.region]){rseen[r.region]=1; regions.push(r.region);} });
+  Object.values(mkRegion).forEach(function(r){ if(!rseen[r]){rseen[r]=1; regions.push(r);} });
+  if(selR && !selR.dataset.filled){
+    regions.forEach(function(r){ selR.innerHTML+='<option value="'+r+'">'+r+'</option>'; });
+    selR.dataset.filled='1';
+  }
+
+  function rankColor(r){
+    if(r==null) return '';
+    if(r<=3)  return '#0b7a5d';
+    if(r<=10) return '#2f9e79';
+    if(r<=30) return '#7cb8a3';
+    if(r<=60) return '#b9d4c9';
+    return '#e3ece8';
+  }
+
+  function render(){
+    var rf=selR?selR.value:'';
+    // 市场按区域分组排序
+    var ccs=Object.keys(mkName).filter(function(cc){ return !rf || mkRegion[cc]===rf; });
+    ccs.sort(function(a,b){
+      var d=regions.indexOf(mkRegion[a])-regions.indexOf(mkRegion[b]);
+      if(d) return d;
+      return mkName[a].localeCompare(mkName[b],'zh');
+    });
+
+    var h='<table class="mx"><thead>';
+    // 区域分组行
+    h+='<tr class="grow"><th class="corner" rowspan="2">竞品</th>';
+    var i=0;
+    while(i<ccs.length){
+      var rg=mkRegion[ccs[i]], n=0;
+      while(i+n<ccs.length && mkRegion[ccs[i+n]]===rg) n++;
+      h+='<th colspan="'+n+'" class="gh'+(i>0?' gsep':'')+'"><span>'+rg+'</span></th>';
+      i+=n;
+    }
+    h+='</tr><tr>';
+    ccs.forEach(function(cc,idx){
+      var sep=(idx>0 && mkRegion[cc]!==mkRegion[ccs[idx-1]])?' gsep':'';
+      h+='<th class="'+sep.trim()+'" title="'+mkName[cc]+'">'+mkName[cc]+'</th>';
+    });
+    h+='</tr></thead><tbody>';
+
+    aseq.forEach(function(app){
+      var meta=D.chartApps.find(function(a){return a.app===app})||{};
+      h+='<tr><td class="mk">'+app+'<span style="color:var(--ink3);font-weight:400">　'+meta.markets+'国</span></td>';
+      ccs.forEach(function(cc,idx){
+        var sep=(idx>0 && mkRegion[cc]!==mkRegion[ccs[idx-1]])?' gsep':'';
+        var v=box[app+'|'+cc];
+        if(!v){ h+='<td class="'+sep.trim()+'"><div class="cl e"></div></td>'; return; }
+        var col=rankColor(v.rank);
+        var tip=app+' · '+mkName[cc]+'\\n第 '+v.rank+' 名（'+v.genre+'榜）';
+        h+='<td class="'+sep.trim()+'"><div class="cl" style="background:'+col+';color:'+(v.rank<=30?'#fff':'var(--ink2)')+'" title="'+tip.replace(/"/g,'&quot;')+'">'+v.rank+'</div></td>';
+      });
+      h+='</tr>';
+    });
+    h+='</tbody></table>';
+    host.innerHTML=h;
+
+    // 图例带覆盖统计
+    var tot=0, t10=0;
+    ccs.forEach(function(cc){ aseq.forEach(function(a){ var v=box[a+'|'+cc]; if(v){tot++; if(v.rank<=10)t10++;} }); });
+    lg.innerHTML=[['#0b7a5d','前3名'],['#2f9e79','4-10名'],['#7cb8a3','11-30名'],['#b9d4c9','31-60名'],['#e3ece8','61名以后']]
+      .map(function(x){return '<span class="li"><i style="background:'+x[0]+'"></i>'+x[1]+'</span>'}).join('')
+      + '<span class="lnote">当前视图 '+tot+' 个上榜位，其中 '+t10+' 个进前 10　空白＝该分类前 100 名内没有它</span>';
+  }
+  if(selR) selR.onchange=render;
+  render();
+})();
+
+// 5e. 两层证据对照表
+(function(){
+  var host=document.getElementById('tblx');
+  if(!host) return;
+  if(!D.crossLayer || !D.crossLayer.length){ host.innerHTML='<div class="empty">暂无对照数据</div>'; return; }
+  var PN={
+    brand_driven:{t:'品牌驱动',c:'p-blue',d:'榜单强、货架无 —— 用户直接搜品牌名'},
+    both:        {t:'两层都强',c:'p-green',d:'既有下载动能又占住需求词'},
+    aso_only:    {t:'仅占货架',c:'p-amber',d:'占着关键词但没有下载动能'},
+    weak:        {t:'两层都弱',c:'p-gray',d:'两个渠道都未见明显存在'}
+  };
+  var rows=D.crossLayer.slice().sort(function(a,b){ return b.chart_top10-a.chart_top10 || b.mind_cells-a.mind_cells; });
+  var h='<table><thead><tr><th>竞品</th><th>形态</th><th>榜单覆盖</th><th>最佳榜位</th><th>进前10国数</th><th>货架占位格</th></tr></thead><tbody>';
+  rows.forEach(function(r){
+    var p=PN[r.pattern]||PN.weak;
+    h+='<tr><td><b>'+r.app+'</b></td>'
+     + '<td><span class="pill '+p.c+'" title="'+p.d+'">'+p.t+'</span></td>'
+     + '<td>'+r.chart_markets+' 国</td>'
+     + '<td>第 '+r.chart_best+' 名</td>'
+     + '<td>'+r.chart_top10+'</td>'
+     + '<td>'+r.mind_cells+'</td></tr>';
+  });
+  h+='</tbody></table>';
+  host.innerHTML=h;
 })();
 
 // 6. 市场明细表
