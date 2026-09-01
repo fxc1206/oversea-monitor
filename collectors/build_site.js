@@ -183,17 +183,24 @@ function main() {
     metrics: metricSlim,
     holders: holders,
     dimGroups: (function () {
-      // 把维度按业务大类归组并固定顺序，让矩阵列有语义结构、可加分割线
-      const seq = ['私域沟通', '内容表达', '视频消费', '信息公共场', '灵感发现',
-                   '生活决策', '消费决策', '知识获取', '本地社群', '关系建立'];
-      const byGroup = {};
-      for (const d of R.dimension_occupancy) {
-        const row = mindSlim.find((r) => r.dim === d.dimension);
-        const g = row ? row.gp : '其他';
-        (byGroup[g] = byGroup[g] || []).push(d.dimension);
-      }
-      const ordered = seq.filter((g) => byGroup[g]).concat(Object.keys(byGroup).filter((g) => seq.indexOf(g) < 0));
-      return ordered.map((g) => ({ g: g, dims: byGroup[g] }));
+      // 展示用的粗粒度分组：config 里的 group 字段有 10 个值、其中 6 个只含 1 个维度，
+      // 分组等于没分。这里合成 4 个粗类，让分割线真正划出有战略含义的区块：
+      // 社交关系 / 内容消费 / 生活决策（小红书主场，刻意放在一起看空白）/ 消费决策。
+      const MACRO = [
+        { g: '社交关系', dims: ['chat_friends', 'dating', 'local_community'] },
+        { g: '内容消费', dims: ['short_video', 'share_photos', 'news_public'] },
+        { g: '生活决策', dims: ['discover_inspiration', 'recipes', 'home_decor', 'travel_plan',
+                              'restaurant', 'beauty_skincare', 'fitness', 'learn_howto'] },
+        { g: '消费决策', dims: ['shopping_deals', 'product_review'] },
+      ];
+      const known = new Set(MACRO.flatMap((m) => m.dims));
+      const all = R.dimension_occupancy.map((d) => d.dimension);
+      const groups = MACRO
+        .map((m) => ({ g: m.g, dims: m.dims.filter((d) => all.includes(d)) }))
+        .filter((m) => m.dims.length);
+      const rest = all.filter((d) => !known.has(d));
+      if (rest.length) groups.push({ g: '其他', dims: rest });
+      return groups;
     })(),
     brandColor: brandColor,
     brandLegend: brandLegend,
@@ -280,14 +287,14 @@ td b{color:var(--ink);font-weight:600}
 /* 未占据的格子刻意做成极浅的斜纹底：既不抢眼，又和「有数据但弱」区分开 */
 .cl.e{background:repeating-linear-gradient(45deg,var(--line),var(--line) 3px,transparent 3px,transparent 6px);
   color:var(--ink3);opacity:.55}
-.cl.nm{width:92px;padding:0 5px;justify-content:flex-start;height:26px;border-radius:4px;
+.cl.nm{width:74px;padding:0 4px;justify-content:flex-start;height:24px;border-radius:4px;
   box-shadow:inset 0 -2px 0 rgba(0,0,0,.14)}
 .cl.nm > span{display:block;width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
   font-size:10px;font-weight:700;letter-spacing:-.1px;color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.25)}
-.cl.nm:hover{transform:none;width:auto;min-width:92px;box-shadow:0 3px 10px rgba(0,0,0,.22);z-index:4}
+.cl.nm:hover{transform:none;width:auto;min-width:74px;box-shadow:0 3px 10px rgba(0,0,0,.22);z-index:4}
 .cl.nm:hover > span{overflow:visible;text-overflow:clip}
-.mx.named{border-spacing:3px}
-.mx.named .cl.e{height:26px;border-radius:4px}
+.mx.named{border-spacing:2px}
+.mx.named .cl.e{height:24px;border-radius:4px}
 .mx.named th{height:84px;padding-bottom:5px}
 .mx.named th.corner{height:84px}
 .mx th.corner .csub{writing-mode:horizontal-tb;font-size:9.5px;font-weight:400;color:var(--ink3);margin-top:2px}
@@ -295,12 +302,12 @@ td b{color:var(--ink);font-weight:600}
 .mx .grow td{padding:0 0 4px;border:0;vertical-align:bottom}
 .mx .grow .gcorner{position:sticky;left:0;background:var(--card);z-index:2}
 .mx .grow .gh{text-align:center}
-.mx .grow .gh span{display:inline-block;font-size:9.5px;font-weight:700;color:var(--ink2);
+.mx .grow .gh span{display:inline-block;font-size:11px;font-weight:700;color:var(--ink2);
   letter-spacing:.3px;padding:0 4px 3px;border-bottom:2px solid var(--line);width:calc(100% - 6px);
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 /* 竖分割线（心智大类）：偏冷的实线，和区域线区分层级 */
-.mx th.gsep, .mx td.gsep{border-left:1.5px solid var(--sep-col)!important;padding-left:5px}
-.mx .grow .gh + .gh{border-left:1.5px solid var(--sep-col)}
+.mx th.gsep, .mx td.gsep{border-left:2px solid var(--sep-col)!important;padding-left:6px}
+.mx .grow .gh + .gh{padding-left:4px}
 /* 横分割线（区域）：更重，带区域名，作为一级分组 */
 .mx .rgrow td.rg{border-top:2.5px solid var(--sep-row);padding-top:11px}
 .mx .rgrow.first td.rg{border-top:0;padding-top:3px}
@@ -308,7 +315,7 @@ td b{color:var(--ink);font-weight:600}
 .mx .trow td{padding:0 2px 5px;border:0;vertical-align:top}
 .mx .trow .tcorner{position:sticky;left:0;background:var(--card);z-index:2;white-space:nowrap;
   font-size:9.5px;color:var(--ink3);padding:0 9px 5px 4px;text-align:right}
-.mx .trow .tm > span{display:block;max-width:92px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+.mx .trow .tm > span{display:block;max-width:74px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
   font-size:9px;color:var(--primary);opacity:.9;font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
 .mx3 .cl{width:30px}
 .mx3 th{height:70px}
