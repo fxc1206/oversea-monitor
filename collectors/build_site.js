@@ -210,15 +210,26 @@ td b{color:var(--ink);font-weight:600}
 .cl{width:26px;height:22px;border-radius:3px;display:flex;align-items:center;justify-content:center;
   font-size:10px;font-weight:600;color:#fff;cursor:default;transition:transform .1s}
 .cl:hover{transform:scale(1.22);position:relative;z-index:3;box-shadow:0 2px 8px rgba(0,0,0,.18)}
-.cl.e{background:var(--line);color:var(--ink3)}
-.cl.nm{width:84px;padding:0 4px;justify-content:flex-start}
+/* 未占据的格子刻意做成极浅的斜纹底：既不抢眼，又和「有数据但弱」区分开 */
+.cl.e{background:repeating-linear-gradient(45deg,var(--line),var(--line) 3px,transparent 3px,transparent 6px);
+  color:var(--ink3);opacity:.55}
+.cl.nm{width:92px;padding:0 5px;justify-content:flex-start;height:26px;border-radius:4px;
+  box-shadow:inset 0 -2px 0 rgba(0,0,0,.14)}
 .cl.nm > span{display:block;width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
-  font-size:9.5px;font-weight:600;letter-spacing:-.1px}
-.cl.nm:hover{transform:none;width:auto;min-width:84px;box-shadow:none}
+  font-size:10px;font-weight:700;letter-spacing:-.1px;color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.25)}
+.cl.nm:hover{transform:none;width:auto;min-width:92px;box-shadow:0 3px 10px rgba(0,0,0,.22);z-index:4}
 .cl.nm:hover > span{overflow:visible;text-overflow:clip}
-.mx.named{border-spacing:2px}
-.mx.named th{height:70px}
-.mx.named th.corner{height:70px}
+.mx.named{border-spacing:3px}
+.mx.named .cl.e{height:26px;border-radius:4px}
+.mx.named th{height:84px;padding-bottom:5px}
+.mx.named th.corner{height:84px}
+.mx th.corner .csub{writing-mode:horizontal-tb;font-size:9.5px;font-weight:400;color:var(--ink3);margin-top:2px}
+/* 搜索词行：横排在列头下方，让每列口径可直读 */
+.mx .trow td{padding:0 2px 5px;border:0;vertical-align:top}
+.mx .trow .tcorner{position:sticky;left:0;background:var(--card);z-index:2;white-space:nowrap;
+  font-size:9.5px;color:var(--ink3);padding:0 9px 5px 4px;text-align:right}
+.mx .trow .tm > span{display:block;max-width:92px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+  font-size:9px;color:var(--primary);opacity:.9;font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
 .mx3 .cl{width:30px}
 .mx3 th{height:70px}
 .mx3 th.corner{height:70px}
@@ -234,7 +245,12 @@ select,input{background:var(--card);color:var(--ink);border:1px solid var(--line
 input{flex:1;min-width:160px}
 .foot{color:var(--ink3);font-size:12px;text-align:center;margin-top:34px;padding-top:18px;border-bottom:0;border-top:1px solid var(--line)}
 .legend{display:flex;gap:14px;flex-wrap:wrap;font-size:11.5px;color:var(--ink3);margin-top:10px}
-.legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:4px;vertical-align:-1px}
+.legend i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:5px;vertical-align:-2px}
+.legend{font-size:12px}
+.note.src{background:rgba(77,126,255,.07);border-left:3px solid var(--primary)}
+.note.warn{background:rgba(224,135,0,.08);border-left:3px solid #e08700}
+.note code{background:rgba(127,127,127,.14);padding:1px 5px;border-radius:4px;font-size:12px;
+  font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
 ul.tight{margin:6px 0 0;padding-left:20px;font-size:13.5px;color:var(--ink2)}
 ul.tight li{margin-bottom:5px}
 ul.tight b{color:var(--ink)}
@@ -286,8 +302,11 @@ ul.tight b{color:var(--ink)}
 </div>
 
 <h2>心智占据矩阵</h2>
-<p class="h2sub">每格回答一件事：这个市场的这个心智，是否已经有产品真的占住了</p>
-<div class="note"><b>怎么判定「占住」。</b>只看排名不够 —— App Store 搜索永远有第一名，但一个 3000 评分的小工具排第一和国民级产品排第一，含义完全不同。所以引入体量：<b>占住</b>＝首位产品体量高于该市场中位水平<b>且</b>领先优势 ≥45%；<b>争夺中</b>＝有大玩家但格局未定；<b>未见强占位</b>＝首位体量低于本市场中位水平。<br><b>关键：「未见强占位」不等于「空位」。</b>搜索排名由商店文案关键词匹配度主导，Pinterest 实际占着美国「找灵感」心智，但它的商店描述不写 inspiration ideas，因此会被判为未见强占位。这个误报方向偏危险（让人以为有空位、进去撞上巨头），所以刻意不叫空位 —— 要当空位用，必须先做定性验证。</div>
+<p class="h2sub">在每个国家的 App Store 用当地语言搜一个需求词，看谁排第一 —— 逐格显示搜的什么词</p>
+<div class="note src"><b>这张表的数据是什么。</b>不是下载量、不是 DAU，是 <b>iOS App Store 站内搜索结果</b>。做法：39 个国家 × 16 个需求词，用当地语言在该国商店搜索（entity=software，取前 10 名），记录首位产品及其评分数。<br>
+举例：日本「做饭找菜谱」格搜的是 <code>レシピ</code>，返回クラシル、クックパッド、デリッシュキッチン⋯首位クラシル 75.8 万评分，判定为「占住」。<br>
+<b>能回答：</b>用户在商店里搜这个需求，会先撞见谁。<b>不能回答：</b>用户实际用谁完成这件事 —— 那需要评论文本或用户调研。</div>
+<div class="note warn"><b>两个必须知道的边界。</b>① <b>「未见强占位」不等于「空位」</b>：排名由商店文案关键词匹配度主导，Pinterest 实际占着美国「找灵感」心智，但它的描述不写 inspiration ideas，就会被判成未见强占位。这个误报方向偏危险（让人以为有空位、进去撞上巨头）。② 判定加了体量门槛：<b>占住</b>＝首位体量高于该市场中位水平<b>且</b>领先第二名 ≥45%；<b>争夺中</b>＝有大玩家但格局未定；否则未见强占位。</div>
 <div class="card">
   <div class="ctrl">
     <select id="m1_mode">
@@ -483,10 +502,10 @@ var dimCn = {}; D.dims.forEach(function(d){ dimCn[d.dimension]=d.dimension_cn; }
   regions.forEach(function(r){ selR.innerHTML += '<option>'+r+'</option>'; });
 
   var OCC = {
-    occupied: {c:'#1e7f6b', t:'占住', d:'大体量且领先 ≥45%'},
-    contested:{c:'#F0A500', t:'争夺', d:'有大玩家但格局未定'},
-    unclaimed:{c:'', t:'未见强占位', d:'首位低于本市场中位水平'},
-    noise:    {c:'', t:'信号不可用', d:'词匹配质量差'}
+    occupied: {c:'#0b7a5d', t:'占住', d:'首位体量大且领先第二名 ≥45%'},
+    contested:{c:'#e08700', t:'争夺中', d:'有大玩家但格局未定'},
+    unclaimed:{c:'', t:'未见强占位', d:'首位体量低于本市场中位（≠空位）'},
+    noise:    {c:'', t:'信号不可用', d:'该词搜索结果无效'}
   };
   var TYPE = {
     local:   {c:'#0d9488', t:'本土专属', d:'仅 1 国出现，本地玩家'},
@@ -500,9 +519,22 @@ var dimCn = {}; D.dims.forEach(function(d){ dimCn[d.dimension]=d.dimension_cn; }
   function render(){
     var mode=sel.value, rg=selR.value;
     var list = order.filter(function(m){ return box[m] && (!rg || regionOf[m]===rg); });
-    var h='<table class="mx'+(mode==='occ'?' named':'')+'"><thead><tr><th class="corner">市场</th>';
-    dims.forEach(function(d){ h+='<th>'+dimCn[d]+'</th>'; });
-    h+='</tr></thead><tbody>';
+    var h='<table class="mx'+(mode==='occ'?' named':'')+'"><thead><tr><th class="corner">市场<div class="csub">格内＝首位产品</div></th>';
+    var terms={};
+    dims.forEach(function(d){
+      // 该维度在当前筛选市场里最常用的搜索词，用于列头 title 与下方口径行
+      var tc={}; list.forEach(function(m){ var rr=box[m]&&box[m][d]; if(rr&&rr.tm) tc[rr.tm]=(tc[rr.tm]||0)+1; });
+      var tw=Object.entries(tc).sort(function(a,b){return b[1]-a[1]})[0];
+      terms[d]=tw?tw[0]:'';
+      h+='<th title="'+dimCn[d]+(tw?' · 搜索词：'+tw[0]:'')+'">'+dimCn[d]+'</th>';
+    });
+    h+='</tr>';
+    if(mode==='occ'){
+      h+='<tr class="trow"><td class="tcorner">搜索词</td>';
+      dims.forEach(function(d){ h+='<td class="tm" title="'+(terms[d]||'')+'"><span>'+String(terms[d]||'—').replace(/</g,'&lt;')+'</span></td>'; });
+      h+='</tr>';
+    }
+    h+='</thead><tbody>';
     var curRg='';
     list.forEach(function(m){
       if(!rg && regionOf[m]!==curRg){ curRg=regionOf[m];
@@ -514,8 +546,10 @@ var dimCn = {}; D.dims.forEach(function(d){ dimCn[d.dimension]=d.dimension_cn; }
         else if(mode==='occ'){
           var o=r.occ||'noise'; col=OCC[o].c;
           txt = (o==='occupied'||o==='contested') ? (r.bd||'') : '';
-          tip += ' · '+OCC[o].t + (r.t1r!=null?' · 首位'+(r.t1r>=1000?(r.t1r/1000).toFixed(0)+'k':r.t1r)+'评分':'')
-              + (r.sh!=null?' · 领先'+r.sh+'%':'') + (r.t1?' · '+r.t1:'');
+          tip = m+' · '+dimCn[d]+'\\n搜索词：'+(r.tm||'—')+'\\n判定：'+OCC[o].t
+              + (r.t1r!=null?'（首位 '+(r.t1r>=1000?(r.t1r/1000).toFixed(0)+'k':r.t1r)+' 评分'+(r.sh!=null?'，领先 '+r.sh+'%':'')+'）':'')
+              + '\\n搜索结果 #1 '+(r.t1||'—') + (r.t2?'\\n　　　　 #2 '+r.t2:'') + (r.t3?'\\n　　　　 #3 '+r.t3:'')
+              + (r.q!=='ok'?'\\n⚠ 信号质量：'+r.q:'');
         }
         else if(mode==='type'){
           var t=r.cls||'none'; col=TYPE[t].c; txt=t==='none'?'':TYPE[t].t.charAt(0);
@@ -532,9 +566,14 @@ var dimCn = {}; D.dims.forEach(function(d){ dimCn[d.dimension]=d.dimension_cn; }
     });
     document.getElementById('mx1').innerHTML=h+'</tbody></table>';
     if(mode==='occ'){
+      var cnt={occupied:0,contested:0,other:0};
+      list.forEach(function(m){ dims.forEach(function(d){ var r=box[m][d];
+        if(r&&(r.occ==='occupied'||r.occ==='contested')) cnt[r.occ]++; else cnt.other++; }); });
       lg.innerHTML = ['occupied','contested'].map(function(k){
-        return '<span><i style="background:'+OCC[k].c+'"></i>'+OCC[k].t+'　<span style="opacity:.65">'+OCC[k].d+'</span></span>'; }).join('')
-        + '<span><i style="background:var(--line)"></i>未见强占位　<span style="opacity:.65">不等于空位，见上方说明</span></span>';
+        return '<span><i style="background:'+OCC[k].c+'"></i><b>'+OCC[k].t+'</b> '+cnt[k]+' 格　<span style="opacity:.6">'+OCC[k].d+'</span></span>'; }).join('')
+        + '<span><i style="background:repeating-linear-gradient(45deg,var(--line),var(--line) 3px,transparent 3px,transparent 6px)"></i>'
+        + '<b>未见强占位</b> '+cnt.other+' 格　<span style="opacity:.6">≠ 空位，见上方边界说明</span></span>'
+        + '<span style="opacity:.6">悬停任意格可看搜索词与前三名结果</span>';
     }
     else if(mode==='type'){
       lg.innerHTML = ['local','regional','global','social'].map(function(k){
