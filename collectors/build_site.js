@@ -26,8 +26,28 @@ function main() {
   const mind = A.latest('mindshare');
   const metrics = A.latest('app_metrics');
 
+  // ---- 占位方类型分类 ----
+  // 依据「同一个 top1 占位方横跨多少个市场」判断它是本土玩家还是国际玩家：
+  // 只在 1 国出现 = 本土专属；2-5 国 = 区域玩家；≥6 国 = 国际工具；命中社交正则 = 社交产品。
+  // 这个分类回答的是「进入该市场该需求，正面要对上谁」——比原来的长表更有战略含义。
+  const appsCfg = require('../config/apps.json');
+  const SOCIAL_RE = new RegExp(appsCfg.social_regex, 'i');
+  const spread = {};
+  for (const r of mind.rows) {
+    const t = (r.top5 || [])[0];
+    if (!t) continue;
+    (spread[t] = spread[t] || new Set()).add(r.cc);
+  }
+  const classify = (t) => {
+    if (!t) return 'none';
+    if (SOCIAL_RE.test(t)) return 'social';
+    const n = spread[t] ? spread[t].size : 1;
+    return n >= 6 ? 'global' : n >= 2 ? 'regional' : 'local';
+  };
+
   // ---- 压缩内联数据：只留站点需要的字段，控制体积 ----
   const mindSlim = mind.rows.map((r) => ({
+    cls: classify((r.top5 || [])[0]),
     rg: r.region, cc: r.cc, mk: r.market, dim: r.dimension, dcn: r.dimension_cn, gp: r.group,
     tm: r.term, q: r.signal_quality, sr: r.social_top_rank, sn: r.social_top_name,
     t1: (r.top5 || [])[0] || '', t2: (r.top5 || [])[1] || '', t3: (r.top5 || [])[2] || '',
@@ -115,16 +135,23 @@ td b{color:var(--ink);font-weight:600}
 .p-med{background:rgba(240,165,0,.16);color:#c98600}
 .p-low{background:rgba(224,92,92,.14);color:#c94b4b}
 .p-blue{background:rgba(77,126,255,.14);color:var(--primary)}
-.hm{border-collapse:separate;border-spacing:2px;font-size:11px}
-.hm th{padding:4px 5px;font-size:10px;text-transform:none;letter-spacing:0;border:0;
-  writing-mode:vertical-rl;text-orientation:mixed;height:88px;vertical-align:bottom}
-.hm td{padding:0;border:0}
-.hm .mk{padding:3px 8px;white-space:nowrap;font-size:11.5px;color:var(--ink2);border:0}
-.cell{width:26px;height:22px;border-radius:3px;display:flex;align-items:center;justify-content:center;
-  font-size:10px;font-weight:600;color:#fff}
-.c0{background:var(--line);color:var(--ink3)}
-.c1{background:#0d9488}.c2{background:#2b9e7e}.c3{background:#4D7EFF}
-.c4{background:#7B61FF}.c5{background:#a78bfa}
+.mx{border-collapse:separate;border-spacing:2px;font-size:11px}
+.mx th{padding:4px 5px;font-size:10px;text-transform:none;letter-spacing:0;border:0;
+  writing-mode:vertical-rl;text-orientation:mixed;height:92px;vertical-align:bottom;color:var(--ink3);font-weight:600}
+.mx th.corner{writing-mode:horizontal-tb;height:92px;vertical-align:bottom;white-space:nowrap;
+  padding-bottom:6px;position:sticky;left:0;background:var(--card);z-index:2}
+.mx td{padding:0;border:0}
+.mx .mk{padding:3px 9px 3px 4px;white-space:nowrap;font-size:11.5px;color:var(--ink2);border:0;
+  position:sticky;left:0;background:var(--card);z-index:1}
+.mx .rgrow .rg{padding:9px 4px 3px;font-size:10.5px;font-weight:700;color:var(--ink3);
+  letter-spacing:.6px;text-align:left;position:sticky;left:0;background:var(--card)}
+.cl{width:26px;height:22px;border-radius:3px;display:flex;align-items:center;justify-content:center;
+  font-size:10px;font-weight:600;color:#fff;cursor:default;transition:transform .1s}
+.cl:hover{transform:scale(1.22);position:relative;z-index:3;box-shadow:0 2px 8px rgba(0,0,0,.18)}
+.cl.e{background:var(--line);color:var(--ink3)}
+.mx2 .cl{width:24px}
+.mx2 th{height:82px}
+.mx2 th.corner{height:82px}
 .ctrl{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
 select,input{background:var(--card);color:var(--ink);border:1px solid var(--line);
   border-radius:8px;padding:7px 10px;font-size:13px;font-family:inherit}
@@ -182,37 +209,48 @@ ul.tight b{color:var(--ink)}
   <div class="card"><div id="c_regionbar" class="chart"></div></div>
 </div>
 
-<h2>占位热力图</h2>
-<p class="h2sub">每格为社交产品在该市场该维度的最高排名，颜色越深越靠前；灰色表示前 10 名内无社交产品</p>
+<h2>需求入口归属矩阵</h2>
+<p class="h2sub">每格为该市场该维度的首位占位方类型 —— 判断进入时要正面对上谁</p>
 <div class="card">
-  <div class="scroll"><div id="heat"></div></div>
-  <div class="legend">
-    <span><i class="c1" style="background:#0d9488"></i>第 1-2 名</span>
-    <span><i style="background:#4D7EFF"></i>第 3-4 名</span>
-    <span><i style="background:#7B61FF"></i>第 5-6 名</span>
-    <span><i style="background:#a78bfa"></i>第 7-10 名</span>
-    <span><i style="background:#e6ebf5"></i>无社交产品</span>
+  <div class="ctrl">
+    <select id="m1_mode">
+      <option value="type">显示：占位方类型</option>
+      <option value="social">显示：社交产品最高排名</option>
+    </select>
+    <select id="m1_region"><option value="">全部区域</option></select>
   </div>
+  <div class="scroll"><div id="mx1"></div></div>
+  <div class="legend" id="lg1"></div>
 </div>
 
-<h2>市场明细</h2>
-<p class="h2sub">可按区域筛选、按市场名搜索</p>
+<h2>竞品市场重心矩阵</h2>
+<p class="h2sub">每格为该竞品评分数在该市场的占比（按竞品自身全球总量归一化）—— 深色即其用户盘所在</p>
+<div class="note info" style="margin:0 0 14px">刻意<b>按每个竞品自身归一化</b>，不做跨竞品绝对值对比：评分转化率在不同产品间差异巨大，横向比绝对值会得出错误结论。同一行内可比，跨行只看形态不看深浅。</div>
 <div class="card">
+  <div class="scroll"><div id="mx2"></div></div>
+  <div class="legend" id="lg2"></div>
+</div>
+
+<h2>明细数据</h2>
+<p class="h2sub">矩阵看格局，明细用于查具体某格是谁</p>
+<details class="card" style="padding:14px 18px">
+  <summary style="cursor:pointer;font-size:14px;font-weight:600;color:var(--ink)">展开需求入口明细（630 行，可筛选搜索）</summary>
+  <div style="margin-top:14px">
   <div class="ctrl">
     <select id="f_region"><option value="">全部区域</option></select>
     <select id="f_dim"><option value="">全部维度</option></select>
     <input id="f_kw" placeholder="搜索市场、占位产品…">
   </div>
   <div class="scroll"><table id="t_mind">
-    <thead><tr><th>市场</th><th>区域</th><th>维度</th><th>检索词</th><th>首位占位</th><th>社交最高排名</th><th>信号</th></tr></thead>
+    <thead><tr><th>市场</th><th>区域</th><th>维度</th><th>首位占位</th><th>社交最高排名</th><th>信号</th></tr></thead>
     <tbody></tbody>
   </table></div>
   <div id="t_count" style="color:var(--ink3);font-size:12px;margin-top:10px"></div>
-</div>
-
-<h2>竞品指标基线</h2>
-<p class="h2sub">评分数为累计值，日增才是量级代理 —— 只能同 App 纵向比，跨 App 比绝对值无意义</p>
-<div class="card">
+  </div>
+</details>
+<details class="card" style="padding:14px 18px">
+  <summary style="cursor:pointer;font-size:14px;font-weight:600;color:var(--ink)">展开竞品指标明细（418 行，评分数/版本/发版日）</summary>
+  <div style="margin-top:14px">
   <div class="ctrl">
     <select id="f_app"><option value="">全部竞品</option></select>
     <input id="f_mkw" placeholder="搜索市场…">
@@ -222,7 +260,8 @@ ul.tight b{color:var(--ink)}
     <tbody></tbody>
   </table></div>
   <div id="m_count" style="color:var(--ink3);font-size:12px;margin-top:10px"></div>
-</div>
+  </div>
+</details>
 
 <h2>方法局限</h2>
 <div class="card">
@@ -320,26 +359,116 @@ function mk(id, opt){ try{ var el=document.getElementById(id); if(!el) return;
   });
 })();
 
-// 5. 热力图
+// 5. 矩阵一：需求入口归属
 (function(){
   var dims = D.dims.map(function(d){return d.dimension});
   var dimCn = {}; D.dims.forEach(function(d){ dimCn[d.dimension]=d.dimension_cn; });
-  var mks = {};
-  D.mind.forEach(function(r){ mks[r.mk] = mks[r.mk]||{rg:r.rg,cells:{}}; mks[r.mk].cells[r.dim]=r.sr; });
-  var order = D.markets.map(function(m){return m.market}).filter(function(m){return mks[m]});
-  var h = '<table class="hm"><thead><tr><th class="mk" style="writing-mode:horizontal-tb;height:auto">市场</th>';
-  dims.forEach(function(d){ h += '<th>'+dimCn[d]+'</th>'; });
-  h += '</tr></thead><tbody>';
-  order.forEach(function(m){
-    h += '<tr><td class="mk">'+m+'</td>';
-    dims.forEach(function(d){
-      var r = mks[m].cells[d];
-      var cls = !r ? 'c0' : r<=2 ? 'c1' : r<=4 ? 'c3' : r<=6 ? 'c4' : 'c5';
-      h += '<td><div class="cell '+cls+'" title="'+m+' / '+dimCn[d]+(r?' 第'+r+'名':' 无社交产品')+'">'+(r||'')+'</div></td>';
-    });
-    h += '</tr>';
+  var box={}, regionOf={};
+  D.mind.forEach(function(r){ if(!box[r.mk]){ box[r.mk]={}; regionOf[r.mk]=r.rg; } box[r.mk][r.dim]=r; });
+  // 按区域分组排序：区域内按社交占位率降序，让同区域市场相邻，便于横向比较
+  var rgSeq=[]; D.markets.forEach(function(m){ if(rgSeq.indexOf(m.region)<0) rgSeq.push(m.region); });
+  var rank={}; D.markets.forEach(function(m,i){ rank[m.market]=i; });
+  var order = Object.keys(box).sort(function(a,b){
+    var d = rgSeq.indexOf(regionOf[a]) - rgSeq.indexOf(regionOf[b]);
+    if(d) return d;
+    return (rank[a]==null?999:rank[a]) - (rank[b]==null?999:rank[b]);
   });
-  document.getElementById('heat').innerHTML = h + '</tbody></table>';
+
+  var sel=document.getElementById('m1_mode'), selR=document.getElementById('m1_region'), lg=document.getElementById('lg1');
+  var regions=[]; D.markets.forEach(function(m){ if(regions.indexOf(m.region)<0) regions.push(m.region); });
+  regions.forEach(function(r){ selR.innerHTML += '<option>'+r+'</option>'; });
+
+  var TYPE = {
+    local:   {c:'#0d9488', t:'本土专属', d:'仅 1 国出现，本地玩家'},
+    regional:{c:'#4D7EFF', t:'区域玩家', d:'2-5 国出现'},
+    global:  {c:'#F0A500', t:'国际工具', d:'≥6 国出现'},
+    social:  {c:'#7B61FF', t:'社交产品', d:'社交/内容社区占首位'},
+    none:    {c:'', t:'无数据', d:'该词无有效结果'}
+  };
+  function rankColor(r){ return !r?'':r<=2?'#0d9488':r<=4?'#4D7EFF':r<=6?'#7B61FF':'#a78bfa'; }
+
+  function render(){
+    var mode=sel.value, rg=selR.value;
+    var list = order.filter(function(m){ return box[m] && (!rg || regionOf[m]===rg); });
+    var h='<table class="mx"><thead><tr><th class="corner">市场</th>';
+    dims.forEach(function(d){ h+='<th>'+dimCn[d]+'</th>'; });
+    h+='</tr></thead><tbody>';
+    var curRg='';
+    list.forEach(function(m){
+      if(!rg && regionOf[m]!==curRg){ curRg=regionOf[m];
+        h+='<tr class="rgrow"><td class="rg" colspan="'+(dims.length+1)+'">'+curRg+'</td></tr>'; }
+      h+='<tr><td class="mk">'+m+'</td>';
+      dims.forEach(function(d){
+        var r=box[m][d], col='', txt='', tip=m+' · '+dimCn[d];
+        if(!r){ tip+=' · 无数据'; }
+        else if(mode==='type'){
+          var t=r.cls||'none'; col=TYPE[t].c; txt=t==='none'?'':TYPE[t].t.charAt(0);
+          tip+=' · '+TYPE[t].t+(r.t1?' · '+r.t1:'');
+        } else {
+          col=rankColor(r.sr); txt=r.sr||''; 
+          tip+=' · '+(r.sr?'社交最高 #'+r.sr+(r.sn?' '+r.sn:''):'前10无社交产品');
+        }
+        h+='<td><div class="cl'+(col?'':' e')+'" style="'+(col?'background:'+col:'')+'" title="'+tip.replace(/"/g,'')+'">'+txt+'</div></td>';
+      });
+      h+='</tr>';
+    });
+    document.getElementById('mx1').innerHTML=h+'</tbody></table>';
+    if(mode==='type'){
+      lg.innerHTML = ['local','regional','global','social'].map(function(k){
+        return '<span><i style="background:'+TYPE[k].c+'"></i>'+TYPE[k].t+'　<span style="opacity:.65">'+TYPE[k].d+'</span></span>'; }).join('')
+        + '<span><i style="background:var(--line)"></i>无有效结果</span>';
+    } else {
+      lg.innerHTML = '<span><i style="background:#0d9488"></i>第 1-2 名</span><span><i style="background:#4D7EFF"></i>第 3-4 名</span>'
+        + '<span><i style="background:#7B61FF"></i>第 5-6 名</span><span><i style="background:#a78bfa"></i>第 7-10 名</span>'
+        + '<span><i style="background:var(--line)"></i>前 10 无社交产品</span>';
+    }
+  }
+  sel.onchange=render; selR.onchange=render; render();
+})();
+
+// 5b. 矩阵二：竞品市场重心
+(function(){
+  var byApp={}, ccs=[], ccName={}, ccRegion={};
+  D.metrics.forEach(function(r){
+    byApp[r.cn]=byApp[r.cn]||{}; byApp[r.cn][r.cc]=r;
+    if(ccs.indexOf(r.cc)<0){ ccs.push(r.cc); ccName[r.cc]=r.mk; ccRegion[r.cc]=r.rg; }
+  });
+  // 市场按区域分组排序，便于看地理形态
+  var rgOrder=[]; D.markets.forEach(function(m){ if(rgOrder.indexOf(m.region)<0) rgOrder.push(m.region); });
+  ccs.sort(function(a,b){
+    var d=rgOrder.indexOf(ccRegion[a])-rgOrder.indexOf(ccRegion[b]); if(d) return d;
+    return ccName[a].localeCompare(ccName[b],'zh');
+  });
+  var apps=Object.keys(byApp).sort(function(a,b){
+    var sa=0,sb=0; for(var k in byApp[a]) sa+=byApp[a][k].rc; for(var k2 in byApp[b]) sb+=byApp[b][k2].rc;
+    return sb-sa;
+  });
+  function shade(p){ // p = 占该竞品全球总量比例
+    if(p>=0.25) return '#1e40af'; if(p>=0.12) return '#2563eb'; if(p>=0.06) return '#4D7EFF';
+    if(p>=0.03) return '#7B9CFF'; if(p>=0.01) return '#a8bdff'; if(p>0) return '#d6e0ff'; return '';
+  }
+  var h='<table class="mx mx2"><thead><tr><th class="corner">竞品</th>';
+  ccs.forEach(function(c){ h+='<th title="'+ccName[c]+'">'+ccName[c]+'</th>'; });
+  h+='</tr></thead><tbody>';
+  apps.forEach(function(a){
+    var tot=0; for(var k in byApp[a]) tot+=byApp[a][k].rc;
+    h+='<tr><td class="mk">'+a+'</td>';
+    ccs.forEach(function(c){
+      var r=byApp[a][c];
+      if(!r){ h+='<td><div class="cl e" title="'+a+' · '+ccName[c]+' · 未上架">·</div></td>'; return; }
+      var p=tot?r.rc/tot:0;
+      h+='<td><div class="cl" style="background:'+shade(p)+';color:'+(p>=0.06?'#fff':'var(--ink2)')+'" title="'+
+        a+' · '+ccName[c]+' · 评分数 '+r.rc.toLocaleString()+'（占其全球 '+(p*100).toFixed(1)+'%）">'+
+        (p>=0.03?(p*100).toFixed(0):'')+'</div></td>';
+    });
+    h+='</tr>';
+  });
+  document.getElementById('mx2').innerHTML=h+'</tbody></table>';
+  document.getElementById('lg2').innerHTML =
+    '<span>数字为占该竞品全球评分数的百分比</span>'
+    + '<span><i style="background:#1e40af"></i>≥25%</span><span><i style="background:#2563eb"></i>12-25%</span>'
+    + '<span><i style="background:#4D7EFF"></i>6-12%</span><span><i style="background:#7B9CFF"></i>3-6%</span>'
+    + '<span><i style="background:#a8bdff"></i>1-3%</span><span><i style="background:var(--line)"></i>未上架</span>';
 })();
 
 // 6. 市场明细表
@@ -361,7 +490,7 @@ function mk(id, opt){ try{ var el=document.getElementById(id); if(!el) return;
     tb.innerHTML = rows.slice(0,400).map(function(r){
       var q = r.q==='ok'?'<span class="pill p-ok">ok</span>':r.q==='medium'?'<span class="pill p-med">medium</span>':'<span class="pill p-low">'+r.q+'</span>';
       var s = r.sr ? '<span class="pill p-blue">#'+r.sr+'</span> '+(r.sn||'').slice(0,26) : '<span style="color:var(--ink3)">无</span>';
-      return '<tr><td><b>'+r.mk+'</b></td><td>'+r.rg+'</td><td>'+r.dcn+'</td><td style="color:var(--ink3)">'+r.tm+
+      return '<tr><td><b>'+r.mk+'</b></td><td>'+r.rg+'</td><td>'+r.dcn+
         '</td><td>'+(r.t1||'').slice(0,32)+'</td><td>'+s+'</td><td>'+q+'</td></tr>';
     }).join('');
     ct.textContent = '共 '+rows.length+' 行' + (rows.length>400 ? '，显示前 400 行' : '');
