@@ -411,8 +411,8 @@ ul.tight b{color:var(--ink)}
   <div class="ctrl">
     <select id="m1_mode" style="display:none"><option value="brand">brand</option></select>
     <select id="m1_layer">
+      <option value="broad" selected>搜品类宽词（如 videos / ideas / shopping）</option>
       <option value="narrow">搜需求场景词（如 short videos / inspiration ideas）</option>
-      <option value="broad">搜品类宽词（如 videos / ideas / shopping）</option>
     </select>
     <select id="m1_region"><option value="">全部区域</option></select>
     <span class="ctrlhint">同色＝同一产品</span>
@@ -434,8 +434,8 @@ ul.tight b{color:var(--ink)}
 <div class="card">
   <div class="ctrl">
     <select id="h_layer">
+      <option value="broad" selected>品类宽词层</option>
       <option value="narrow">需求场景词层</option>
-      <option value="broad">品类宽词层</option>
     </select>
     <select id="h_scope">
       <option value="all">全部占位方</option>
