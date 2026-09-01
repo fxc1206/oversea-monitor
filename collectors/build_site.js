@@ -111,6 +111,52 @@ function main() {
     mks: Object.entries(h.markets).sort((a, b) => b[1] - a[1]).map(([k]) => k),
     rgs: Object.entries(h.regions).sort((a, b) => b[1] - a[1]).map(([k, v]) => ({ r: k, n: v })),
   })).sort((a, b) => b.n - a.n || b.mn - a.mn);
+
+  // ---- 品牌配色：只给占位 ≥3 格的品牌独立色，其余归为「单点占位」 ----
+  // 理由：86 个占位方全给独立色会让色彩失去信息量（相邻色无法分辨）。
+  // 占 ≥3 格的 16 个品牌覆盖 93/175 格，是版图的主要构成；1-2 格的用统一弱色，
+  // 视觉上自然退到背景，让「谁横扫了多个市场」成为第一眼信息。
+  // 优先用品牌真实识别色（Pinterest 红 / Snapchat 黄 / Tinder 粉），其余用高区分补充色。
+  const BRAND_COLORS = {
+    'Pinterest':         '#E60023',
+    'Snapchat':          '#F7B500',
+    'Bumble':            '#00838F',
+    'Tinder Dating App': '#FE3C72',
+    'Instagram':         '#C13584',
+    'DramaBox':          '#7B4DFF',
+    'ReelShort':         '#9B6BFF',
+    'Temu':              '#FF6B00',
+    'AliExpress Shoppin':'#FF4747',
+    'Google News':       '#4285F4',
+    'Apple News':        '#2D6FE0',
+    'Nextdoor':          '#00B551',
+    'Tripadvisor':       '#00A680',
+    'OpenTable':         '#1FA98C',
+    'Tasty':             '#7CB342',
+    'Simply Draw':       '#8C6FE0',
+    'Kwai':              '#FF7A00',
+    'Likee':             '#FF3E6C',
+    'CapCut':            '#4D9EFF',
+    'Houzz':             '#5CB85C',
+    'FamilyAlbum':       '#3DBFA8',
+    'Yubo':              '#FF5C8A',
+    'Badoo':             '#C74DFF',
+    'happn':             '#FF4D6D',
+    'Omi':               '#E05CB8',
+    'スマートニュース':    '#3B72D9',
+    'クラシル':           '#00B37E',
+  };
+  const PALETTE = ['#E60023','#F7B500','#7B4DFF','#00B551','#FF6B00','#4285F4','#FE3C72','#00C2A8',
+                   '#C13584','#9B6BFF','#FF7A00','#1FA98C','#2D6FE0','#8C6FE0','#FF3E6C','#5CB85C'];
+  const MINOR_COLOR = '#9aa6c4'; // 1-2 格的单点占位
+  const brandColor = {};
+  let pi = 0;
+  for (const h of holders) {
+    if (h.n < 3) continue;
+    brandColor[h.bd] = BRAND_COLORS[h.bd] || PALETTE[pi++ % PALETTE.length];
+  }
+  const brandLegend = holders.filter((h) => h.n >= 3)
+    .map((h) => ({ bd: h.bd, c: brandColor[h.bd], n: h.n, mn: h.mn }));
   const metricSlim = metrics.rows.filter((r) => r.listed).map((r) => ({
     app: r.app, cn: r.app_cn, rg: r.region, cc: r.cc, mk: r.market,
     rc: r.rating_count, ra: r.rating_avg, v: r.version, vd: (r.version_release_date || '').slice(0, 10),
@@ -133,6 +179,9 @@ function main() {
     mind: mindSlim,
     metrics: metricSlim,
     holders: holders,
+    brandColor: brandColor,
+    brandLegend: brandLegend,
+    minorColor: MINOR_COLOR,
   };
 
   const kpiSocialTotal = R.app_mindshare.reduce((s, a) => s + a.total_placements, 0);
@@ -310,9 +359,10 @@ ul.tight b{color:var(--ink)}
 <div class="card">
   <div class="ctrl">
     <select id="m1_mode">
-      <option value="occ">显示：心智占据强度</option>
-      <option value="type">显示：占位方类型（本土/国际/社交）</option>
-      <option value="social">显示：社交产品最高排名</option>
+      <option value="brand">上色方式：按占位产品（看各家势力范围）</option>
+      <option value="occ">上色方式：按占据强度（看占没占住）</option>
+      <option value="type">上色方式：按占位方类型（本土/国际/社交）</option>
+      <option value="social">上色方式：社交产品最高排名</option>
     </select>
     <select id="m1_region"><option value="">全部区域</option></select>
   </div>
@@ -519,7 +569,8 @@ var dimCn = {}; D.dims.forEach(function(d){ dimCn[d.dimension]=d.dimension_cn; }
   function render(){
     var mode=sel.value, rg=selR.value;
     var list = order.filter(function(m){ return box[m] && (!rg || regionOf[m]===rg); });
-    var h='<table class="mx'+(mode==='occ'?' named':'')+'"><thead><tr><th class="corner">市场<div class="csub">格内＝首位产品</div></th>';
+    var named=(mode==='occ'||mode==='brand');
+    var h='<table class="mx'+(named?' named':'')+'"><thead><tr><th class="corner">市场<div class="csub">格内＝首位产品</div></th>';
     var terms={};
     dims.forEach(function(d){
       // 该维度在当前筛选市场里最常用的搜索词，用于列头 title 与下方口径行
@@ -529,7 +580,7 @@ var dimCn = {}; D.dims.forEach(function(d){ dimCn[d.dimension]=d.dimension_cn; }
       h+='<th title="'+dimCn[d]+(tw?' · 搜索词：'+tw[0]:'')+'">'+dimCn[d]+'</th>';
     });
     h+='</tr>';
-    if(mode==='occ'){
+    if(named){
       h+='<tr class="trow"><td class="tcorner">搜索词</td>';
       dims.forEach(function(d){ h+='<td class="tm" title="'+(terms[d]||'')+'"><span>'+String(terms[d]||'—').replace(/</g,'&lt;')+'</span></td>'; });
       h+='</tr>';
@@ -543,6 +594,18 @@ var dimCn = {}; D.dims.forEach(function(d){ dimCn[d.dimension]=d.dimension_cn; }
       dims.forEach(function(d){
         var r=box[m][d], col='', txt='', tip=m+' · '+dimCn[d];
         if(!r){ tip+=' · 无数据'; }
+        else if(mode==='brand'){
+          var o2=r.occ||'noise';
+          if(o2==='occupied'||o2==='contested'){
+            col = D.brandColor[r.bd] || D.minorColor;
+            txt = r.bd||'';
+          }
+          tip = m+' · '+dimCn[d]+'\\n搜索词：'+(r.tm||'—')
+              + '\\n首位：'+(r.t1||'—')
+              + (r.t1r!=null?'（'+(r.t1r>=1000?(r.t1r/1000).toFixed(0)+'k':r.t1r)+' 评分）':'')
+              + '\\n判定：'+OCC[o2].t
+              + (r.bd&&D.brandColor[r.bd]?'\\n该产品共占 '+(function(){var x=D.holders.filter(function(z){return z.bd===r.bd})[0];return x?x.n+' 格 / '+x.mn+' 国':'—'})():'');
+        }
         else if(mode==='occ'){
           var o=r.occ||'noise'; col=OCC[o].c;
           txt = (o==='occupied'||o==='contested') ? (r.bd||'') : '';
@@ -558,14 +621,27 @@ var dimCn = {}; D.dims.forEach(function(d){ dimCn[d.dimension]=d.dimension_cn; }
           col=rankColor(r.sr); txt=r.sr||''; 
           tip+=' · '+(r.sr?'社交最高 #'+r.sr+(r.sn?' '+r.sn:''):'前10无社交产品');
         }
-        var isName = (mode==='occ' && txt.length>2);
+        var isName = ((mode==='occ'||mode==='brand') && txt.length>2);
         h+='<td><div class="cl'+(col?'':' e')+(isName?' nm':'')+'" style="'+(col?'background:'+col:'')+'" title="'+tip.replace(/"/g,'')+'">'
           + (isName?'<span>'+txt.replace(/</g,'&lt;')+'</span>':txt) + '</div></td>';
       });
       h+='</tr>';
     });
     document.getElementById('mx1').innerHTML=h+'</tbody></table>';
-    if(mode==='occ'){
+    if(mode==='brand'){
+      // 图例即势力榜：按占位格数排序，直接读出各家覆盖多少市场
+      var used={}; list.forEach(function(m){ dims.forEach(function(d){ var r=box[m][d];
+        if(r&&(r.occ==='occupied'||r.occ==='contested')&&r.bd) used[r.bd]=(used[r.bd]||0)+1; }); });
+      var shown=D.brandLegend.filter(function(b){ return used[b.bd]; });
+      var minor=Object.keys(used).filter(function(k){ return !D.brandColor[k]; });
+      var minorCells=minor.reduce(function(s,k){ return s+used[k]; },0);
+      lg.innerHTML = shown.map(function(b){
+        return '<span title="'+b.bd+'：全球 '+b.n+' 格 / '+b.mn+' 国"><i style="background:'+b.c+'"></i>'
+          + b.bd+' <b>'+used[b.bd]+'</b></span>'; }).join('')
+        + (minorCells?'<span title="占位 1-2 格的长尾产品，未单独配色"><i style="background:'+D.minorColor+'"></i>单点占位 <b>'+minorCells+'</b>　<span style="opacity:.6">'+minor.length+' 个长尾产品</span></span>':'')
+        + '<span style="opacity:.6">数字＝当前视图下占位格数；斜纹＝未见强占位</span>';
+    }
+    else if(mode==='occ'){
       var cnt={occupied:0,contested:0,other:0};
       list.forEach(function(m){ dims.forEach(function(d){ var r=box[m][d];
         if(r&&(r.occ==='occupied'||r.occ==='contested')) cnt[r.occ]++; else cnt.other++; }); });
