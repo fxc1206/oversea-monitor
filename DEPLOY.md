@@ -50,7 +50,23 @@ git push
 
 ## 方案 B：GitHub Actions 全自动
 
-仓库里已带 `.github/workflows/daily.yml`，每天北京时间 09:00 自动采集、构建、发布。
+⚠️ **首次部署时这个文件没有推上去** —— 用于部署的 token 只勾了 `repo`，而推送 `.github/workflows/` 下的文件额外需要 `workflow` scope，GitHub 会直接拒绝：
+
+```
+refusing to allow a Personal Access Token to create or update workflow
+`.github/workflows/daily.yml` without `workflow` scope
+```
+
+要启用自动采集，需要重新生成一个同时勾选 `repo` + `workflow` 的 token，然后把工作流文件加回去：
+
+```bash
+# workflow 文件内容见本文件末尾附录，或从交付包里取
+mkdir -p .github/workflows
+# 放入 daily.yml 后
+git add .github && git commit -m "ci: 每日自动采集" && git push
+```
+
+工作流内容：每天北京时间 09:00 自动采集、构建、发布。
 
 启用步骤：
 
@@ -85,3 +101,69 @@ Pages 的目录设置要选 `/docs` 而不是根目录。另外首次发布有 1
 
 **想让别人看不到某些市场的数据**
 数据在 `docs/data.json` 和 HTML 内联块里都有一份。要过滤就在 `build_site.js` 的 `mindSlim` / `metricSlim` 那两个 map 里加条件，重新构建。
+
+---
+
+## 附录：daily.yml 完整内容
+
+需 token 带 `workflow` scope 才能推送。保存到 `.github/workflows/daily.yml`：
+
+```yaml
+name: 每日采集并发布看板
+
+# GitHub Actions 的 runner 在境外，网络出口通常比本地更顺畅。
+# 如果 Actions 被限流，把 schedule 注释掉、改成本地跑 + git push 即可。
+on:
+  schedule:
+    - cron: '0 1 * * *'   # UTC 01:00 = 北京时间 09:00
+  workflow_dispatch:       # 支持手动触发
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  collect-and-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: 采集心智占位数据
+        run: node collectors/mindshare.js --limit 10
+        env:
+          OM_INTERVAL_MS: 1500
+
+      - name: 采集竞品指标
+        run: node collectors/app_metrics.js
+        env:
+          OM_INTERVAL_MS: 1500
+
+      - name: 生成报告
+        run: node collectors/report.js
+
+      - name: 构建静态站点
+        run: node collectors/build_site.js
+
+      - name: 提交数据快照
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/snapshots reports docs
+          git diff --staged --quiet || git commit -m "chore: 每日数据采集 $(date -u +%Y-%m-%d)"
+          git push
+
+      - uses: actions/configure-pages@v4
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: docs
+      - uses: actions/deploy-pages@v4
+```
