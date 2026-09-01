@@ -1,0 +1,1789 @@
+{
+ "generated_at": "2026-08-31T12:33:25.581Z",
+ "mindshare_date": "2026-08-31",
+ "metrics_date": "2026-08-31",
+ "health": {
+  "mindshare_rows": 630,
+  "mindshare_quality": {
+   "ok": 554,
+   "medium": 41,
+   "low": 9,
+   "empty": 26
+  },
+  "mindshare_usable_pct": 94.4,
+  "metric_rows": 429,
+  "metric_listed": 418,
+  "snapshot_dates": [
+   "2026-08-31"
+  ],
+  "history_days": 1,
+  "trend_ready": false
+ },
+ "supply_structure": [
+  {
+   "region": "非洲",
+   "market": "肯尼亚",
+   "cc": "ke",
+   "dims": 16,
+   "social_hits": 7,
+   "low_quality": 0,
+   "top1_sellers": [
+    "Google LLC",
+    "Snap, Inc.",
+    "LIKEME PTE. LTD.",
+    "MIXI, Inc.",
+    "Pinterest, Inc.",
+    "BuzzFeed",
+    "TripIt Inc",
+    "Zomato Media Pvt. Ltd.",
+    "Vett LLC",
+    "Alibaba.com Singapore E-Commerce Private Limited",
+    "AIBY Incorporated",
+    "STEEZY Inc",
+    "Fizz Social Corp.",
+    "Tinder LLC",
+    "Fitbod Inc.",
+    "HUBX YAZILIM HIZMETLERI ANONIM SIRKETI"
+   ],
+   "social_occupancy_pct": 43.8,
+   "signal_reliability": 100,
+   "distinct_top1_sellers": 16
+  },
+  {
+   "region": "南亚",
+   "market": "巴基斯坦",
+   "cc": "pk",
+   "dims": 16,
+   "social_hits": 6,
+   "low_quality": 0,
+   "top1_sellers": [
+    "Google LLC",
+    "NT HEIGHTS LIMITED",
+    "Dailymotion",
+    "Xender (HK) Limited",
+    "Pinterest, Inc.",
+    "BuzzFeed",
+    "Vacation and Travel Planner App LLC",
+    "Zomato Media Pvt. Ltd.",
+    "Vett LLC",
+    "Alibaba.com Singapore E-Commerce Private Limited",
+    "AIBY Incorporated",
+    "Juicestand Inc",
+    "Fizz Social Corp.",
+    "Tinder LLC",
+    "FITNESS ONLINE MChJ",
+    "HUBX YAZILIM HIZMETLERI ANONIM SIRKETI"
+   ],
+   "social_occupancy_pct": 37.5,
+   "signal_reliability": 100,
+   "distinct_top1_sellers": 16
+  },
+  {
+   "region": "非洲",
+   "market": "尼日利亚",
+   "cc": "ng",
+   "dims": 16,
+   "social_hits": 6,
+   "low_quality": 1,
+   "top1_sellers": [
+    "Opera Norway AS",
+    "Sparkly, LLC",
+    "STORYMATRIX PTE. LTD",
+    "Xender (HK) Limited",
+    "Pinterest, Inc.",
+    "Tudorspan Limited",
+    "Vacation and Travel Planner App LLC",
+    "Yelp, Inc.",
+    "Vett LLC",
+    "Alibaba.com Singapore E-Commerce Private Limited",
+    "Revios, Inc.",
+    "Juicestand Inc",
+    "Fizz Social Corp.",
+    "Dmitry Merva",
+    "Leap Health Fitness Limited",
+    "HUBX YAZILIM HIZMETLERI ANONIM SIRKETI"
+   ],
+   "social_occupancy_pct": 37.5,
+   "signal_reliability": 93.8,
+   "distinct_top1_sellers": 16
+  },
+  {
+   "region": "东欧",
+   "market": "俄罗斯",
+   "cc": "ru",
+   "dims": 15,
+   "social_hits": 5,
+   "low_quality": 0,
+   "top1_sellers": [
+    "BisnessPress LLC",
+    "Snap, Inc.",
+    "LIKEME PTE. LTD.",
+    "Snap, Inc.",
+    "Homify Online GmbH & Co. KG",
+    "Closed Joint Stock Company\"Trade House\"Perekrestok",
+    "Tripomatic s.r.o.",
+    "Tripadvisor",
+    "BESKONTAKT, OOO",
+    "LLC Axiom",
+    "flowkey GmbH",
+    "Block Browser INC",
+    "YAUHENI DOUNAR",
+    "FITNESS ONLINE MChJ",
+    "Room Planner Ltd"
+   ],
+   "social_occupancy_pct": 33.3,
+   "signal_reliability": 100,
+   "distinct_top1_sellers": 14
+  },
+  {
+   "region": "东南亚",
+   "market": "新加坡",
+   "cc": "sg",
+   "dims": 16,
+   "social_hits": 5,
+   "low_quality": 0,
+   "top1_sellers": [
+    "Mediacorp Pte Ltd",
+    "Snap, Inc.",
+    "New Leaf Publishing, Inc.",
+    "MIXI, Inc.",
+    "Pinterest, Inc.",
+    "BuzzFeed",
+    "Vacation and Travel Planner App LLC",
+    "OpenTable, Inc.",
+    "Andras Munkacsi",
+    "AMZN Mobile LLC",
+    "Bazaarvoice, Inc.",
+    "Simply Ltd",
+    "Meetup LLC",
+    "Bumble Holding Limited",
+    "Fast Builder Limited",
+    "Houzz Inc."
+   ],
+   "social_occupancy_pct": 31.3,
+   "signal_reliability": 100,
+   "distinct_top1_sellers": 16
+  },
+  {
+   "region": "西欧",
+   "market": "荷兰",
+   "cc": "nl",
+   "dims": 16,
+   "social_hits": 5,
+   "low_quality": 0,
+   "top1_sellers": [
+    "BBC Studios Distribution Ltd.",
+    "Snap, Inc.",
+    "LIKEME PTE. LTD.",
+    "MIXI, Inc.",
+    "I Teach Tiny Humans, LLC",
+    "BuzzFeed",
+    "Stippl B.V.",
+    "OpenTable, Inc.",
+    "Singgih Surya Dharma",
+    "Alibaba.com Singapore E-Commerce Private Limited",
+    "Trustpilot AS",
+    "4Axis Technologies Pte. Ltd.",
+    "Nextdoor.com, Inc.",
+    "Bumble Holding Limited",
+    "Hevy Studios S.L.",
+    "Houzz Inc."
+   ],
+   "social_occupancy_pct": 31.3,
+   "signal_reliability": 100,
+   "distinct_top1_sellers": 16
+  },
+  {
+   "region": "东南亚",
+   "market": "泰国",
+   "cc": "th",
+   "dims": 15,
+   "social_hits": 4,
+   "low_quality": 1,
+   "top1_sellers": [
+    "X Corp.",
+    "Fugang Company Limited",
+    "LIKEME PTE. LTD.",
+    "Instagram, Inc.",
+    "Patrick Johansson",
+    "COOKPAD INC. (CA)",
+    "Md. Mahmud Ahsan",
+    "Wongnai Media Company Limited",
+    "Purple Ventures Company Limited",
+    "Roshana Lee",
+    "Itiel Maimon",
+    "HiddenCat Company",
+    "Grindr LLC",
+    "Leap Health Fitness Limited",
+    "Toca Boca AB"
+   ],
+   "social_occupancy_pct": 26.7,
+   "signal_reliability": 93.3,
+   "distinct_top1_sellers": 15
+  },
+  {
+   "region": "西欧",
+   "market": "西班牙",
+   "cc": "es",
+   "dims": 15,
+   "social_hits": 4,
+   "low_quality": 0,
+   "top1_sellers": [
+    "Google LLC",
+    "Twelve APP",
+    "STORYMATRIX PTE. LTD",
+    "Google LLC",
+    "AppChocolate Ltd.",
+    "COOKPAD INC. (CA)",
+    "Alberto Araiz Bitar",
+    "OpenTable, Inc.",
+    "Whaleco Inc.",
+    "Trustpilot AS",
+    "AnnapurnApp Technologies UG haftungsbeschrankt",
+    "Eventbrite",
+    "Bumble Holding Limited",
+    "MONTIBUS LTD",
+    "La Redoute"
+   ],
+   "social_occupancy_pct": 26.7,
+   "signal_reliability": 100,
+   "distinct_top1_sellers": 14
+  },
+  {
+   "region": "拉美",
+   "market": "阿根廷",
+   "cc": "ar",
+   "dims": 15,
+   "social_hits": 4,
+   "low_quality": 0,
+   "top1_sellers": [
+    "Google LLC",
+    "CONSTRUCT TECHNOLOGY PTE. LTD.",
+    "Captions, LLC",
+    "SHAREit Technologies Co. Ltd",
+    "AppChocolate Ltd.",
+    "Andreia Assis Soares da Conceicao",
+    "Vacation and Travel Planner App LLC",
+    "OpenTable, Inc.",
+    "Whaleco Inc.",
+    "Different Productions, LLC",
+    "Simply Ltd",
+    "Betabox labs llc",
+    "Bumble Holding Limited",
+    "MONTIBUS LTD",
+    "BWEB SARL"
+   ],
+   "social_occupancy_pct": 26.7,
+   "signal_reliability": 100,
+   "distinct_top1_sellers": 15
+  },
+  {
+   "region": "拉美",
+   "market": "智利",
+   "cc": "cl",
+   "dims": 15,
+   "social_hits": 4,
+   "low_quality": 0,
+   "top1_sellers": [
+    "Google LLC",
+    "WEJOY  PTE. LTD.",
+    "STORYMATRIX PTE. LTD",
+    "SHAREit Technologies Co. Ltd",
+    "AppChocolate Ltd.",
+    "Andreia Assis Soares da Conceicao",
+    "TripIt Inc",
+    "OpenTable, Inc.",
+    "Whaleco Inc.",
+    "BigBalli Consulting llc",
+    "AnnapurnApp Technologies UG haftungsbeschrankt",
+    "WhatsApp Inc.",
+    "Bumble Holding Limited",
+    "MONTIBUS LTD",
+    "Cencosud SA"
+   ],
+   "social_occupancy_pct": 26.7,
+   "signal_reliability": 100,
+   "distinct_top1_sellers": 15
+  },
+  {
+   "region": "拉美",
+   "market": "哥伦比亚",
+   "cc": "co",
+   "dims": 15,
+   "social_hits": 4,
+   "low_quality": 0,
+   "top1_sellers": [
+    "Google LLC",
+    "Hyperconnect LLC",
+    "JOYO TECHNOLOGY PTE. LTD.",
+    "SHAREit Technologies Co. Ltd",
+    "AppChocolate Ltd.",
+    "Andreia Assis Soares da Conceicao",
+    "TripIt Inc",
+    "OpenTable, Inc.",
+    "Whaleco Inc.",
+    "Different Productions, LLC",
+    "Simply Ltd",
+    "Betabox labs llc",
+    "Bumble Holding Limited",
+    "MONTIBUS LTD",
+    "BWEB SARL"
+   ],
+   "social_occupancy_pct": 26.7,
+   "signal_reliability": 100,
+   "distinct_top1_sellers": 15
+  },
+  {
+   "region": "东欧",
+   "market": "乌克兰",
+   "cc": "ua",
+   "dims": 15,
+   "social_hits": 4,
+   "low_quality": 0,
+   "top1_sellers": [
+    "Andrey Andrusenko",
+    "Badoo Software Ltd",
+    "LIKEME PTE. LTD.",
+    "Instagram, Inc.",
+    "Homify Online GmbH & Co. KG",
+    "Sergei Fomichev",
+    "Tripomatic s.r.o.",
+    "Tripadvisor",
+    "SUPERDEAL LIMITED LIABILITY COMPANY",
+    "Karol Jaworski",
+    "Simply Ltd",
+    "dua AG",
+    "Badoo Software Ltd",
+    "Leap Health Fitness Limited",
+    "Room Planner Ltd"
+   ],
+   "social_occupancy_pct": 26.7,
+   "signal_reliability": 100,
+   "distinct_top1_sellers": 14
+  },
+  {
+   "region": "东亚",
+   "market": "韩国",
+   "cc": "kr",
+   "dims": 16,
+   "social_hits": 4,
+   "low_quality": 0,
+   "top1_sellers": [
+    "curved road",
+    "April7 Inc",
+    "STORYMATRIX PTE. LTD",
+    "Rakuten Symphony Korea, Inc.",
+    "Tumblr, Inc.",
+    "EZHLD",
+    "Triple Corp.",
+    "WAD corp",
+    "Hwahae Global Inc.",
+    "Whaleco Inc.",
+    "whitecube Inc.",
+    "Neointro",
+    "CKG Solutions Co., Ltd.",
+    "Mozzet Co. Ltd.",
+    "Planfit Inc.",
+    "Room Planner Ltd"
+   ],
+   "social_occupancy_pct": 25,
+   "signal_reliability": 100,
+   "distinct_top1_sellers": 16
+  },
+  {
+   "region": "东亚",
+   "market": "中国台湾",
+   "cc": "tw",
+   "dims": 16,
+   "social_hits": 4,
+   "low_quality": 0,
+   "top1_sellers": [
+    "Yahoo Inc.",
+    "Tencent Technology (Shenzhen) Company Limited",
+    "BYTEDANCE PTE. LTD.",
+    "Lone Palm Labs, Inc.",
+    "Pinterest, Inc.",
+    "Polydice, Inc.",
+    "Foshan Fullstack Technology LLC",
+    "Kakaku.com, Inc.",
+    "I-TRUE Communications Inc.",
+    "SHOPEE TAIWAN PRIVATE LIMITED",
+    "ASIA SKIN COSMETICS COMPANY",
+    "Duolingo, Inc",
+    "Magic Internet Ltd.",
+    "MatchUp UK Limited",
+    "Apple Distribution International",
+    "Room Planner Ltd"
+   ],
+   "social_occupancy_pct": 25,
+   "signal_reliability": 100,
+   "distinct_top1_sellers": 16
+  },
+  {
+   "region": "东南亚",
+   "market": "菲律宾",
+   "cc": "ph",
+   "dims": 16,
+   "social_hits": 4,
+   "low_quality": 0,
+   "top1_sellers": [
+    "Google LLC",
+    "CONSTRUCT TECHNOLOGY PTE. LTD.",
+    "Dailymotion",
+    "Manisha Lodaliya",
+    "Pinterest, Inc.",
+    "BuzzFeed",
+    "Vacation and Travel Planner App LLC",
+    "OpenTable, Inc.",
+    "Vett LLC",
+    "AMZN Mobile LLC",
+    "Bazaarvoice, Inc.",
+    "Simply Ltd",
+    "Fizz Social Corp.",
+    "Bumble Holding Limited",
+    "Leap Health Fitness Limited",
+    "HUBX YAZILIM HIZMETLERI ANONIM SIRKETI"
+   ],
+   "social_occupancy_pct": 25,
+   "signal_reliability": 100,
+   "distinct_top1_sellers": 16
+  },
+  {
+   "region": "东南亚",
+   "market": "马来西亚",
+   "cc": "my",
+   "dims": 16,
+   "social_hits": 4,
+   "low_quality": 0,
+   "top1_sellers": [
+    "Google LLC",
+    "Snap, Inc.",
+    "LIKEME PTE. LTD.",
+    "Manisha Lodaliya",
+    "Pinterest, Inc.",
+    "COOKPAD INC. (CA)",
+    "Vacation and Travel Planner App LLC",
+    "Beli Technologies, Inc.",
+    "Vett LLC",
+    "AMZN Mobile LLC",
+    "AIBY Incorporated",
+    "Simply Ltd",
+    "Meetup LLC",
+    "Tinder LLC",
+    "Leap Health Fitness Limited",
+    "Houzz Inc."
+   ],
+   "social_occupancy_pct": 25,
+   "signal_reliability": 100,
+   "distinct_top1_sellers": 16
+  },
+  {
+   "region": "南亚",
+   "market": "印度",
+   "cc": "in",
+   "dims": 16,
+   "social_hits": 4,
+   "low_quality": 0,
+   "top1_sellers": [
+    "Inshorts Pte. Ltd.",
+    "Twelve APP",
+    "MOHALLA TECH PRIVATE LIMITED",
+    "Manisha Lodaliya",
+    "Pinterest, Inc.",
+    "AJNS New Media GmbH",
+    "TripIt Inc",
+    "OpenTable, Inc.",
+    "Vett LLC",
+    "Ebates Shopping.com, Inc.",
+    "Bazaarvoice, Inc.",
+    "4Axis Technologies Pte. Ltd.",
+    "Your Local Community App, LLC.",
+    "Bumble Holding Limited",
+    "FITNESS22 LTD",
+    "Houzz Inc."
+   ],
+   "social_occupancy_pct": 25,
+   "signal_reliability": 100,
+   "distinct_top1_sellers": 16
+  },
+  {
+   "region": "西欧",
+   "market": "英国",
+   "cc": "gb",
+   "dims": 16,
+   "social_hits": 4,
+   "low_quality": 0,
+   "top1_sellers": [
+    "Apple Distribution International",
+    "Twelve APP",
+    "New Leaf Publishing, Inc.",
+    "MIXI, Inc.",
+    "Pinterest, Inc.",
+    "Immediate Media Company Limited",
+    "TripIt Inc",
+    "Beli Technologies, Inc.",
+    "Vett LLC",
+    "Pepper Media Holding GmbH",
+    "Trustpilot AS",
+    "Simply Ltd",
+    "Loci App Limited",
+    "Bumble Holding Limited",
+    "Gymshark Ltd",
+    "Reworks Oy"
+   ],
+   "social_occupancy_pct": 25,
+   "signal_reliability": 100,
+   "distinct_top1_sellers": 16
+  },
+  {
+   "region": "中东",
+   "market": "土耳其",
+   "cc": "tr",
+   "dims": 16,
+   "social_hits": 4,
+   "low_quality": 1,
+   "top1_sellers": [
+    "Brokoli Yazilim Ltd. Sti.",
+    "Arrof LTD",
+    "JOYO TECHNOLOGY PTE. LTD.",
+    "SHAREit Technologies Co. Ltd",
+    "woo medya",
+    "NYT Bilgi Teknolojileri Sanayi ve Ticaret A.S.",
+    "TripShape Ltd",
+    "Tripadvisor",
+    "Sertug Eroglu",
+    "N11 ELEKTRONIK TICARET VE BILISIM HIZMETLERI ANONIM SIRKETI",
+    "DENEBUNU BILGI TEKNOLOJILERI REKLAM HIZMETLERI PAZARLAMA SANAYI VE TICARET ANONIM SIRKETI",
+    "Fitric",
+    "IRFAN DEGIRMENCI",
+    "Tinder LLC",
+    "Apple Distribution International",
+    "Room Planner Ltd"
+   ],
+   "social_occupancy_pct": 25,
+   "signal_reliability": 93.8,
+   "distinct_top1_sellers": 16
+  },
+  {
+   "region": "大洋洲",
+   "market": "澳大利亚",
+   "cc": "au",
+   "dims": 16,
+   "social_hits": 4,
+   "low_quality": 0,
+   "top1_sellers": [
+    "Apple Pty Limited",
+    "Sparkly, LLC",
+    "Google LLC",
+    "PhotoCircle, Inc.",
+    "Pinterest, Inc.",
+    "BuzzFeed",
+    "Vacation and Travel Planner App LLC",
+    "OpenTable, Inc.",
+    "Brandefy, Inc.",
+    "KOGAN.COM PTY LTD",
+    "Bazaarvoice, Inc.",
+    "4Axis Technologies Pte. Ltd.",
+    "Nextdoor.com, Inc.",
+    "Bumble Holding Limited",
+    "Fitbod Inc.",
+    "Houzz Inc."
+   ],
+   "social_occupancy_pct": 25,
+   "signal_reliability": 100,
+   "distinct_top1_sellers": 16
+  },
+  {
+   "region": "大洋洲",
+   "market": "新西兰",
+   "cc": "nz",
+   "dims": 16,
+   "social_hits": 4,
+   "low_quality": 0,
+   "top1_sellers": [
+    "NZME Holdings Ltd",
+    "Snap, Inc.",
+    "New Leaf Publishing, Inc.",
+    "MIXI, Inc.",
+    "Pinterest, Inc.",
+    "BuzzFeed",
+    "TripIt Inc",
+    "Zomato Media Pvt. Ltd.",
+    "Brandefy, Inc.",
+    "Slickdeals, LLC",
+    "Trustpilot AS",
+    "Simply Ltd",
+    "Choyo Labs Limited",
+    "Bumble Holding Limited",
+    "Mosaic S.r.l.",
+    "Houzz Inc."
+   ],
+   "social_occupancy_pct": 25,
+   "signal_reliability": 100,
+   "distinct_top1_sellers": 16
+  },
+  {
+   "region": "非洲",
+   "market": "南非",
+   "cc": "za",
+   "dims": 16,
+   "social_hits": 4,
+   "low_quality": 0,
+   "top1_sellers": [
+    "24.com Online Studios (pty) Ltd.",
+    "Discord Inc.",
+    "New Leaf Publishing, Inc.",
+    "PhotoCircle, Inc.",
+    "Pinterest, Inc.",
+    "BuzzFeed",
+    "TripIt Inc",
+    "Zomato Media Pvt. Ltd.",
+    "Standard Beauty And Skincare (PTY) LTD",
+    "Slickdeals, LLC",
+    "AIBY Incorporated",
+    "Simply Ltd",
+    "Mighty Software, Inc.",
+    "Tinder LLC",
+    "FITNESS ONLINE MChJ",
+    "Alper Alten"
+   ],
+   "social_occupancy_pct": 25,
+   "signal_reliability": 100,
+   "distinct_top1_sellers": 16
+  },
+  {
+   "region": "北美",
+   "market": "墨西哥",
+   "cc": "mx",
+   "dims": 15,
+   "social_hits": 3,
+   "low_quality": 0,
+   "top1_sellers": [
+    "Google LLC",
+    "CONSTRUCT TECHNOLOGY PTE. LTD.",
+    "JOYO TECHNOLOGY PTE. LTD.",
+    "SHAREit Technologies Co. Ltd",
+    "AppChocolate Ltd.",
+    "Andreia Assis Soares da Conceicao",
+    "Vacation and Travel Planner App LLC",
+    "OpenTable, Inc.",
+    "Whaleco Inc.",
+    "SEBASTIAN CASTANEDA",
+    "Simply Ltd",
+    "Eventbrite",
+    "Bumble Holding Limited",
+    "MONTIBUS LTD",
+    "BWEB SARL"
+   ],
+   "social_occupancy_pct": 20,
+   "signal_reliability": 100,
+   "distinct_top1_sellers": 15
+  },
+  {
+   "region": "西欧",
+   "market": "意大利",
+   "cc": "it",
+   "dims": 15,
+   "social_hits": 3,
+   "low_quality": 1,
+   "top1_sellers": [
+    "Google LLC",
+    "Hyperconnect LLC",
+    "BYTEDANCE PTE. LTD.",
+    "die kartenmacherei GmbH",
+    "Pinterest, Inc.",
+    "Mondadori Digital SPA",
+    "Vacation and Travel Planner App LLC",
+    "Tripadvisor",
+    "eBay Inc.",
+    "Trustpilot AS",
+    "Itiel Maimon",
+    "Servizi Locali S.p.A.",
+    "PE Digital GmbH",
+    "MONTIBUS LTD",
+    "Room Planner Ltd"
+   ],
+   "social_occupancy_pct": 20,
+   "signal_reliability": 93.3,
+   "distinct_top1_sellers": 15
+  },
+  {
+   "region": "北美",
+   "market": "加拿大",
+   "cc": "ca",
+   "dims": 16,
+   "social_hits": 3,
+   "low_quality": 0,
+   "top1_sellers": [
+    "Apple Canada, Inc.",
+    "VLB",
+    "Dailymotion",
+    "Simplified I.T. Products, LLC",
+    "I Teach Tiny Humans, LLC",
+    "BuzzFeed",
+    "Vacation and Travel Planner App LLC",
+    "Beli Technologies, Inc.",
+    "Sephora USA, Inc",
+    "Flipp Corporation",
+    "Yuca",
+    "Simply Ltd",
+    "Nextdoor.com, Inc.",
+    "Bumble Holding Limited",
+    "Fitbod Inc.",
+    "Houzz Inc."
+   ],
+   "social_occupancy_pct": 18.8,
+   "signal_reliability": 100,
+   "distinct_top1_sellers": 16
+  },
+  {
+   "region": "东南亚",
+   "market": "印尼",
+   "cc": "id",
+   "dims": 16,
+   "social_hits": 3,
+   "low_quality": 1,
+   "top1_sellers": [
+    "PT Agranet Multicitra Siberkom",
+    "Stivisto Inc.",
+    "STORYMATRIX PTE. LTD",
+    "Gema Martinez",
+    "FLIPTECH LENTERA INSPIRASI PERTIWI, PT",
+    "COOKPAD INC. (CA)",
+    "Vacation and Travel Planner App LLC",
+    "Bongsu Cheon",
+    "Daily Dinamika Kreasi, Pt",
+    "PT. HIGOOD LIVE JAKARTA",
+    "Paride Di Lazzaro",
+    "Gismart Ltd",
+    "Ifwe Inc.",
+    "MatchUp UK Limited",
+    "Leap Health Fitness Limited",
+    "Storm8 Studios LLC"
+   ],
+   "social_occupancy_pct": 18.8,
+   "signal_reliability": 93.8,
+   "distinct_top1_sellers": 16
+  },
+  {
+   "region": "中东",
+   "market": "埃及",
+   "cc": "eg",
+   "dims": 16,
+   "social_hits": 3,
+   "low_quality": 0,
+   "top1_sellers": [
+    "NABD Limited",
+    "JSC Mamba",
+    "LIKEME PTE. LTD.",
+    "Chun Li",
+    "Pierre Boudoin",
+    "Mohammed Ghonem",
+    "Vacation and Travel Planner App LLC",
+    "Mohammed Almukhtar",
+    "SEVDE SAVAS",
+    "VOIX ME TECHNOLOGIES",
+    "Paride Di Lazzaro",
+    "Simply Ltd",
+    "Fizz Social Corp.",
+    "TAFROLOGYA LTD",
+    "Leap Health Fitness Limited",
+    "Tang Thi Thuy"
+   ],
+   "social_occupancy_pct": 18.8,
+   "signal_reliability": 100,
+   "distinct_top1_sellers": 16
+  },
+  {
+   "region": "中东",
+   "market": "以色列",
+   "cc": "il",
+   "dims": 16,
+   "social_hits": 3,
+   "low_quality": 0,
+   "top1_sellers": [
+    "Google LLC",
+    "Snap, Inc.",
+    "New Leaf Publishing, Inc.",
+    "BeReal",
+    "Oguz Karadeniz",
+    "BuzzFeed",
+    "TripIt Inc",
+    "OpenTable, Inc.",
+    "Vett LLC",
+    "AMZN Mobile LLC",
+    "Bazaarvoice, Inc.",
+    "Simply Ltd",
+    "Fizz Social Corp.",
+    "Bumble Holding Limited",
+    "Hevy Studios S.L.",
+    "HUBX YAZILIM HIZMETLERI ANONIM SIRKETI"
+   ],
+   "social_occupancy_pct": 18.8,
+   "signal_reliability": 100,
+   "distinct_top1_sellers": 16
+  },
+  {
+   "region": "拉美",
+   "market": "巴西",
+   "cc": "br",
+   "dims": 16,
+   "social_hits": 3,
+   "low_quality": 1,
+   "top1_sellers": [
+    "Google LLC",
+    "Joyride GmbH",
+    "New Leaf Publishing, Inc.",
+    "SHAREit Technologies Co. Ltd",
+    "Pinterest, Inc.",
+    "Webedia Internet Brasil S A",
+    "Vacation and Travel Planner App LLC",
+    "Yelp, Inc.",
+    "Caroline Prudente",
+    "Leroy Merlin Cia Brasileira de Bricolagem",
+    "Glassdoor, Inc.",
+    "Lidwien Veugen",
+    "Eventbrite",
+    "HAPPN SAS",
+    "FITNESS ONLINE MChJ",
+    "Room Planner Ltd"
+   ],
+   "social_occupancy_pct": 18.8,
+   "signal_reliability": 93.8,
+   "distinct_top1_sellers": 16
+  },
+  {
+   "region": "东亚",
+   "market": "日本",
+   "cc": "jp",
+   "dims": 19,
+   "social_hits": 3,
+   "low_quality": 0,
+   "top1_sellers": [
+    "SmartNews, Inc.",
+    "STORYMATRIX PTE. LTD",
+    "Kurashiru, Inc",
+    "SmartNews, Inc.",
+    "jeong-sik kim",
+    "STORYMATRIX PTE. LTD",
+    "MIXI, Inc.",
+    "hirokazu murabe",
+    "Kurashiru, Inc",
+    "GOTARU, Co., LTD.",
+    "Kakaku.com, Inc.",
+    "Google LLC",
+    "MARUI CO., LTD.",
+    "tomoki swanson",
+    "James Silk",
+    "PIAZZA INC.",
+    "eureka,Inc.",
+    "Kintore memo Co.,Ltd",
+    "vega corporation Co.,Ltd."
+   ],
+   "social_occupancy_pct": 15.8,
+   "signal_reliability": 100,
+   "distinct_top1_sellers": 16
+  },
+  {
+   "region": "东欧",
+   "market": "波兰",
+   "cc": "pl",
+   "dims": 15,
+   "social_hits": 2,
+   "low_quality": 1,
+   "top1_sellers": [
+    "Apple Distribution International",
+    "Blender Soft Ltd",
+    "DRAMA YAZILIM HIZMETLERI ANONIM SIRKETI",
+    "Gema Martinez",
+    "Pinterest, Inc.",
+    "Nicole SP Z O.O.",
+    "Vacation and Travel Planner App LLC",
+    "ADAM JERZY KOZDRA",
+    "Bluvv Sp. z o. o.",
+    "ZABKA POLSKA SP Z O O",
+    "Selborn Arnold Zandamela",
+    "KAROL LUKASZ MROSZCZYK",
+    "Badoo Software Ltd",
+    "FITNESS ONLINE MChJ",
+    "Planner5D, UAB"
+   ],
+   "social_occupancy_pct": 13.3,
+   "signal_reliability": 93.3,
+   "distinct_top1_sellers": 15
+  },
+  {
+   "region": "东南亚",
+   "market": "越南",
+   "cc": "vn",
+   "dims": 16,
+   "social_hits": 2,
+   "low_quality": 2,
+   "top1_sellers": [
+    "ePi Technologies Joint Stock Company",
+    "KHANH LINH MINING EQUIPMENT AND COMMERCIAL TRANSPORTATION JOINT STOCK COMPANY",
+    "NETSTORY PTE. LTD.",
+    "Fangzhou Interactive Technology Co., Limited",
+    "Man Hung Sun",
+    "COOKPAD INC. (CA)",
+    "Vacation and Travel Planner App LLC",
+    "KidloLand Kids & Toddler Games",
+    "Son Pham Ngoc",
+    "eCommerce Enablers Pte Ltd",
+    "Son Pham Ngoc",
+    "Quizlet Inc",
+    "Apptico",
+    "CONSTRUCT TECHNOLOGY PTE. LTD.",
+    "Leap Health Fitness Limited",
+    "GLORYWAY PTE. LTD."
+   ],
+   "social_occupancy_pct": 12.5,
+   "signal_reliability": 87.5,
+   "distinct_top1_sellers": 15
+  },
+  {
+   "region": "中东",
+   "market": "阿联酋",
+   "cc": "ae",
+   "dims": 16,
+   "social_hits": 2,
+   "low_quality": 0,
+   "top1_sellers": [
+    "NABD Limited",
+    "JSC Mamba",
+    "LIKEME PTE. LTD.",
+    "Romman Smart Applications LLC",
+    "CIHAN AKGUL",
+    "COOKPAD INC. (CA)",
+    "Vacation and Travel Planner App LLC",
+    "Digix Company For Digital Business Solutions Ltd",
+    "SEVDE SAVAS",
+    "VOIX ME TECHNOLOGIES",
+    "Paride Di Lazzaro",
+    "Unlimited Promova Limited",
+    "Fizz Social Corp.",
+    "UNEARBY LIMITED",
+    "Leap Health Fitness Limited",
+    "PAN EMIRATES HOME FURNISHINGS LLC"
+   ],
+   "social_occupancy_pct": 12.5,
+   "signal_reliability": 100,
+   "distinct_top1_sellers": 16
+  },
+  {
+   "region": "中东",
+   "market": "沙特",
+   "cc": "sa",
+   "dims": 16,
+   "social_hits": 2,
+   "low_quality": 0,
+   "top1_sellers": [
+    "REDDIT, INC.",
+    "PDB PTE. LTD.",
+    "LIKEME PTE. LTD.",
+    "SHAREit Technologies Co. Ltd",
+    "TEM APP LTD",
+    "COOKPAD INC. (CA)",
+    "HOLAFLY LIMITED",
+    "Meshal Almuallimi",
+    "SEVDE SAVAS",
+    "Namshi General Trading LLC",
+    "Paride Di Lazzaro",
+    "Unlimited Promova Limited",
+    "Ashkal For Information Technology Company",
+    "Tinder LLC",
+    "Leap Health Fitness Limited",
+    "Tang Thi Thuy"
+   ],
+   "social_occupancy_pct": 12.5,
+   "signal_reliability": 100,
+   "distinct_top1_sellers": 16
+  },
+  {
+   "region": "北美",
+   "market": "美国",
+   "cc": "us",
+   "dims": 19,
+   "social_hits": 2,
+   "low_quality": 0,
+   "top1_sellers": [
+    "Apple Inc.",
+    "New Leaf Publishing, Inc.",
+    "BuzzFeed",
+    "Apple Inc.",
+    "Twelve APP",
+    "New Leaf Publishing, Inc.",
+    "PhotoCircle, Inc.",
+    "I Teach Tiny Humans, LLC",
+    "BuzzFeed",
+    "Vacation and Travel Planner App LLC",
+    "Beli Technologies, Inc.",
+    "Vett LLC",
+    "Slickdeals, LLC",
+    "Yuca",
+    "STEEZY Inc",
+    "Nextdoor.com, Inc.",
+    "Hinge, Inc.",
+    "Fitbod Inc.",
+    "Houzz Inc."
+   ],
+   "social_occupancy_pct": 10.5,
+   "signal_reliability": 100,
+   "distinct_top1_sellers": 16
+  },
+  {
+   "region": "东亚",
+   "market": "中国香港",
+   "cc": "hk",
+   "dims": 16,
+   "social_hits": 1,
+   "low_quality": 0,
+   "top1_sellers": [
+    "HK01 Company Limited",
+    "Tinder LLC",
+    "FARSUN PTE. LTD.",
+    "Lone Palm Labs, Inc.",
+    "杰 周",
+    "COOKPAD INC. (CA)",
+    "Funliday Inc.",
+    "Kakaku.com, Inc.",
+    "I-TRUE Communications Inc.",
+    "MATCHA INC. JP",
+    "shenzhen huishoubao technology Co., Ltd.",
+    "Wai Chin Ng",
+    "Nanjing iMooPin Network Technology Co., Ltd.",
+    "Heymandi Technology Inc.",
+    "Apple Distribution International",
+    "Room Planner Ltd"
+   ],
+   "social_occupancy_pct": 6.3,
+   "signal_reliability": 100,
+   "distinct_top1_sellers": 16
+  },
+  {
+   "region": "西欧",
+   "market": "德国",
+   "cc": "de",
+   "dims": 16,
+   "social_hits": 1,
+   "low_quality": 0,
+   "top1_sellers": [
+    "Apple Distribution International",
+    "Twelve APP",
+    "New Leaf Publishing, Inc.",
+    "die kartenmacherei GmbH",
+    "PINTEREST EUROPE LIMITED",
+    "Chefkoch GmbH",
+    "Polarsteps B.V.",
+    "OpenTable, Inc.",
+    "NADEZDA MONIATIS",
+    "Pepper Media Holding GmbH",
+    "Cimenio GmbH",
+    "Simply Ltd",
+    "M.A.D. Mobile Apps Developers Limited",
+    "Bumble Holding Limited",
+    "FITNESS ONLINE MChJ",
+    "Bauer Vertriebs KG"
+   ],
+   "social_occupancy_pct": 6.3,
+   "signal_reliability": 100,
+   "distinct_top1_sellers": 16
+  },
+  {
+   "region": "西欧",
+   "market": "法国",
+   "cc": "fr",
+   "dims": 16,
+   "social_hits": 1,
+   "low_quality": 0,
+   "top1_sellers": [
+    "Google LLC",
+    "Hyperconnect LLC",
+    "LIKEME PTE. LTD.",
+    "die kartenmacherei GmbH",
+    "Pinterest, Inc.",
+    "Jow",
+    "Vacation and Travel Planner App LLC",
+    "Tripadvisor",
+    "SEVDE SAVAS",
+    "TDC DATA",
+    "Yuca",
+    "Lidwien Veugen",
+    "Hyperion Defense",
+    "HAPPN SAS",
+    "Amoapps Limited",
+    "NSTAGE Inc."
+   ],
+   "social_occupancy_pct": 6.3,
+   "signal_reliability": 100,
+   "distinct_top1_sellers": 16
+  }
+ ],
+ "dimension_occupancy": [
+  {
+   "dimension": "chat_friends",
+   "dimension_cn": "与朋友聊天",
+   "group": "私域沟通",
+   "markets": 38,
+   "social_hits": 25,
+   "social_occupancy_pct": 65.8,
+   "top_social": [
+    "Snapchat: Chat with friends(11)",
+    "Discord – Talk, Play, Hang Out(4)",
+    "Snapchat: Fotos con Amigos(3)"
+   ],
+   "most_common_holder": [
+    "Snapchat: Chat with friends(5)",
+    "Litmatch - Haz amigos nuevos(2)",
+    "Yubo : Make friends & chat now(2)"
+   ]
+  },
+  {
+   "dimension": "discover_inspiration",
+   "dimension_cn": "找灵感",
+   "group": "灵感发现",
+   "markets": 38,
+   "social_hits": 25,
+   "social_occupancy_pct": 65.8,
+   "top_social": [
+    "Pinterest: Lifestyle Ideas(13)",
+    "Pinterest(10)",
+    "Tumblr – 문화, 아트, 카오스(1)"
+   ],
+   "most_common_holder": [
+    "Pinterest: Lifestyle Ideas(10)",
+    "Pinterest(6)",
+    "Cita del día e inspiración(5)"
+   ]
+  },
+  {
+   "dimension": "short_video",
+   "dimension_cn": "看短视频",
+   "group": "视频消费",
+   "markets": 40,
+   "social_hits": 24,
+   "social_occupancy_pct": 60,
+   "top_social": [
+    "TikTok(6)",
+    "TikTok - Videos, Music & LIVE(5)",
+    "YouTube(4)"
+   ],
+   "most_common_holder": [
+    "ReelShort - Stream Drama & TV(9)",
+    "Likee - Video, Live, Chat(8)",
+    "Dailymotion: Social Videos(3)"
+   ]
+  },
+  {
+   "dimension": "news_public",
+   "dimension_cn": "新闻与公共议题",
+   "group": "信息公共场",
+   "markets": 40,
+   "social_hits": 16,
+   "social_occupancy_pct": 40,
+   "top_social": [
+    "X(15)",
+    "Reddit(1)"
+   ],
+   "most_common_holder": [
+    "Google News(7)",
+    "Apple News(5)",
+    "Google Noticias(4)"
+   ]
+  },
+  {
+   "dimension": "home_decor",
+   "dimension_cn": "家居装修",
+   "group": "生活决策",
+   "markets": 38,
+   "social_hits": 13,
+   "social_occupancy_pct": 34.2,
+   "top_social": [
+    "Pinterest: Lifestyle Ideas(9)",
+    "Pinterest(2)",
+    "Pinterest – おしゃれな画像や写真を検索(1)"
+   ],
+   "most_common_holder": [
+    "Home AI - AI Interior Design(5)",
+    "Houzz Home Design & Renovation(4)",
+    "Juegos Decoración del Hogar(3)"
+   ]
+  },
+  {
+   "dimension": "local_community",
+   "dimension_cn": "本地社群",
+   "group": "本地社群",
+   "markets": 38,
+   "social_hits": 12,
+   "social_occupancy_pct": 31.6,
+   "top_social": [
+    "WhatsApp Messenger(5)",
+    "Nextdoor: Neighbour Network(2)",
+    "Nextdoor: Neighborhood Network(1)"
+   ],
+   "most_common_holder": [
+    "Fizz: Your Authentic Community(7)",
+    "Eventbrite(3)",
+    "Meetup: Social Events & Groups(2)"
+   ]
+  },
+  {
+   "dimension": "share_photos",
+   "dimension_cn": "分享照片",
+   "group": "内容表达",
+   "markets": 38,
+   "social_hits": 11,
+   "social_occupancy_pct": 28.9,
+   "top_social": [
+    "Instagram(5)",
+    "Instants – an Instagram app(2)",
+    "Snapchat: Chat with friends(1)"
+   ],
+   "most_common_holder": [
+    "FamilyAlbum: Share Baby Photos(5)",
+    "SHAREit: Compartir archivos(4)",
+    "PhotoCircle(3)"
+   ]
+  },
+  {
+   "dimension": "recipes",
+   "dimension_cn": "做饭找菜谱",
+   "group": "生活决策",
+   "markets": 40,
+   "social_hits": 6,
+   "social_occupancy_pct": 15,
+   "top_social": [
+    "Pinterest: Lifestyle Ideas(6)"
+   ],
+   "most_common_holder": [
+    "Tasty: Recipes, Cooking Videos(12)",
+    "Cookpad: Recipe & Meal Planner(6)",
+    "Calcular Costos Recetas(4)"
+   ]
+  },
+  {
+   "dimension": "shopping_deals",
+   "dimension_cn": "购物比价",
+   "group": "消费决策",
+   "markets": 38,
+   "social_hits": 1,
+   "social_occupancy_pct": 2.6,
+   "top_social": [
+    "LINE購物(1)"
+   ],
+   "most_common_holder": [
+    "Temu: compra como millonario(4)",
+    "Amazon - Shopping made easy(4)",
+    "AliExpress Shopping App(4)"
+   ]
+  },
+  {
+   "dimension": "learn_howto",
+   "dimension_cn": "学东西教程",
+   "group": "知识获取",
+   "markets": 38,
+   "social_hits": 1,
+   "social_occupancy_pct": 2.6,
+   "top_social": [
+    "Drawing lessons animal line(1)"
+   ],
+   "most_common_holder": [
+    "Simply Draw: Learn to Draw(9)",
+    "Simply Draw: Aprende a dibujar(3)",
+    "STEEZY - Learn How To Dance(2)"
+   ]
+  },
+  {
+   "dimension": "dating",
+   "dimension_cn": "交友约会",
+   "group": "关系建立",
+   "markets": 38,
+   "social_hits": 1,
+   "social_occupancy_pct": 2.6,
+   "top_social": [
+    "Snapchat: Chat with friends(1)"
+   ],
+   "most_common_holder": [
+    "Bumble Dating app: Chat & Date(7)",
+    "Tinder Dating App: Meet & Date(6)",
+    "Bumble: App de Citas y Chat(4)"
+   ]
+  },
+  {
+   "dimension": "travel_plan",
+   "dimension_cn": "旅行做攻略",
+   "group": "生活决策",
+   "markets": 38,
+   "social_hits": 0,
+   "social_occupancy_pct": 0,
+   "top_social": [],
+   "most_common_holder": [
+    "Wanderlog - Travel Planner(13)",
+    "TripIt: Travel Planner(8)",
+    "Wanderlog Planificador d'viaje(2)"
+   ]
+  },
+  {
+   "dimension": "restaurant",
+   "dimension_cn": "找餐厅",
+   "group": "生活决策",
+   "markets": 38,
+   "social_hits": 0,
+   "social_occupancy_pct": 0,
+   "top_social": [],
+   "most_common_holder": [
+    "OpenTable(6)",
+    "OpenTable: Restaurant Bookings(6)",
+    "Beli(4)"
+   ]
+  },
+  {
+   "dimension": "beauty_skincare",
+   "dimension_cn": "护肤美妆测评",
+   "group": "生活决策",
+   "markets": 29,
+   "social_hits": 0,
+   "social_occupancy_pct": 0,
+   "top_social": [],
+   "most_common_holder": [
+    "Vett: Trusted Skincare Reviews(9)",
+    "SkinTalk: Cosmetic Reviews(3)",
+    "＠cosme美容護膚化妝品評價排行榜(2)"
+   ]
+  },
+  {
+   "dimension": "product_review",
+   "dimension_cn": "买东西看测评",
+   "group": "消费决策",
+   "markets": 37,
+   "social_hits": 0,
+   "social_occupancy_pct": 0,
+   "top_social": [],
+   "most_common_holder": [
+    "Influenster: Try free products(5)",
+    "Shopper Truth(4)",
+    "OnSkin: Beauty Product Scanner(4)"
+   ]
+  },
+  {
+   "dimension": "fitness",
+   "dimension_cn": "健身运动",
+   "group": "生活决策",
+   "markets": 38,
+   "social_hits": 0,
+   "social_occupancy_pct": 0,
+   "top_social": [],
+   "most_common_holder": [
+    "Home Workout - No Equipments(9)",
+    "Fitness para Adelgazar en Casa(5)",
+    "Fitbod Workout & Gym Planner(3)"
+   ]
+  }
+ ],
+ "app_mindshare": [
+  {
+   "app": "pinterest",
+   "total_placements": 44,
+   "market_count": 27,
+   "dimension_count": 4,
+   "top_placements": [
+    "中国台湾/找灵感#1",
+    "菲律宾/找灵感#1",
+    "马来西亚/找灵感#1",
+    "新加坡/找灵感#1",
+    "印度/找灵感#1",
+    "巴基斯坦/找灵感#1",
+    "英国/找灵感#1",
+    "德国/找灵感#1"
+   ],
+   "dimensions": [
+    "discover_inspiration",
+    "home_decor",
+    "share_photos",
+    "recipes"
+   ]
+  },
+  {
+   "app": "snapchat",
+   "total_placements": 30,
+   "market_count": 26,
+   "dimension_count": 4,
+   "top_placements": [
+    "马来西亚/与朋友聊天#1",
+    "新加坡/与朋友聊天#1",
+    "荷兰/与朋友聊天#1",
+    "以色列/与朋友聊天#1",
+    "新西兰/与朋友聊天#1",
+    "肯尼亚/与朋友聊天#1",
+    "俄罗斯/与朋友聊天#1",
+    "俄罗斯/分享照片#1"
+   ],
+   "dimensions": [
+    "chat_friends",
+    "share_photos",
+    "dating",
+    "short_video"
+   ]
+  },
+  {
+   "app": "x",
+   "total_placements": 22,
+   "market_count": 21,
+   "dimension_count": 3,
+   "top_placements": [
+    "美国/本地社群#1",
+    "加拿大/本地社群#1",
+    "泰国/新闻与公共议题#1",
+    "荷兰/本地社群#1",
+    "澳大利亚/本地社群#1",
+    "英国/本地社群#2",
+    "阿联酋/新闻与公共议题#2",
+    "沙特/新闻与公共议题#2"
+   ],
+   "dimensions": [
+    "local_community",
+    "news_public",
+    "chat_friends"
+   ]
+  },
+  {
+   "app": "tiktok",
+   "total_placements": 19,
+   "market_count": 18,
+   "dimension_count": 1,
+   "top_placements": [
+    "土耳其/看短视频#2",
+    "越南/看短视频#3",
+    "巴基斯坦/看短视频#3",
+    "中国台湾/看短视频#4",
+    "英国/看短视频#4",
+    "荷兰/看短视频#4",
+    "新西兰/看短视频#4",
+    "日本/看短视频#5"
+   ],
+   "dimensions": [
+    "short_video"
+   ]
+  },
+  {
+   "app": "discord",
+   "total_placements": 16,
+   "market_count": 16,
+   "dimension_count": 1,
+   "top_placements": [
+    "南非/与朋友聊天#1",
+    "菲律宾/与朋友聊天#3",
+    "加拿大/与朋友聊天#5",
+    "印度/与朋友聊天#5",
+    "巴基斯坦/与朋友聊天#5",
+    "以色列/与朋友聊天#5",
+    "澳大利亚/与朋友聊天#5",
+    "肯尼亚/与朋友聊天#5"
+   ],
+   "dimensions": [
+    "chat_friends"
+   ]
+  },
+  {
+   "app": "instagram",
+   "total_placements": 11,
+   "market_count": 11,
+   "dimension_count": 3,
+   "top_placements": [
+    "泰国/分享照片#1",
+    "乌克兰/分享照片#1",
+    "中国台湾/分享照片#3",
+    "俄罗斯/分享照片#4",
+    "印尼/分享照片#5",
+    "日本/看短视频#7",
+    "韩国/分享照片#7",
+    "沙特/分享照片#7"
+   ],
+   "dimensions": [
+    "short_video",
+    "share_photos",
+    "local_community"
+   ]
+  },
+  {
+   "app": "youtube",
+   "total_placements": 10,
+   "market_count": 9,
+   "dimension_count": 1,
+   "top_placements": [
+    "澳大利亚/看短视频#1",
+    "波兰/看短视频#4",
+    "新加坡/看短视频#5",
+    "日本/看短视频#6",
+    "日本/看短视频#6",
+    "新西兰/看短视频#6",
+    "越南/看短视频#7",
+    "南非/看短视频#8"
+   ],
+   "dimensions": [
+    "short_video"
+   ]
+  },
+  {
+   "app": "whatsapp",
+   "total_placements": 7,
+   "market_count": 7,
+   "dimension_count": 2,
+   "top_placements": [
+    "智利/本地社群#1",
+    "意大利/本地社群#3",
+    "西班牙/本地社群#5",
+    "阿根廷/本地社群#6",
+    "哥伦比亚/本地社群#6",
+    "阿联酋/看短视频#10",
+    "埃及/看短视频#10"
+   ],
+   "dimensions": [
+    "local_community",
+    "short_video"
+   ]
+  },
+  {
+   "app": "tumblr",
+   "total_placements": 2,
+   "market_count": 2,
+   "dimension_count": 2,
+   "top_placements": [
+    "韩国/找灵感#1",
+    "意大利/分享照片#6"
+   ],
+   "dimensions": [
+    "discover_inspiration",
+    "share_photos"
+   ]
+  },
+  {
+   "app": "facebook",
+   "total_placements": 2,
+   "market_count": 2,
+   "dimension_count": 2,
+   "top_placements": [
+    "泰国/分享照片#4",
+    "俄罗斯/看短视频#10"
+   ],
+   "dimensions": [
+    "share_photos",
+    "short_video"
+   ]
+  },
+  {
+   "app": "reddit",
+   "total_placements": 2,
+   "market_count": 2,
+   "dimension_count": 1,
+   "top_placements": [
+    "沙特/新闻与公共议题#1",
+    "阿联酋/新闻与公共议题#9"
+   ],
+   "dimensions": [
+    "news_public"
+   ]
+  },
+  {
+   "app": "",
+   "total_placements": 1,
+   "market_count": 1,
+   "dimension_count": 1,
+   "top_placements": [
+    "韩国/本地社群#5"
+   ],
+   "dimensions": [
+    "local_community"
+   ]
+  },
+  {
+   "app": "line",
+   "total_placements": 1,
+   "market_count": 1,
+   "dimension_count": 1,
+   "top_placements": [
+    "中国台湾/购物比价#6"
+   ],
+   "dimensions": [
+    "shopping_deals"
+   ]
+  },
+  {
+   "app": "drawing",
+   "total_placements": 1,
+   "market_count": 1,
+   "dimension_count": 1,
+   "top_placements": [
+    "泰国/学东西教程#2"
+   ],
+   "dimensions": [
+    "learn_howto"
+   ]
+  },
+  {
+   "app": "simple",
+   "total_placements": 1,
+   "market_count": 1,
+   "dimension_count": 1,
+   "top_placements": [
+    "泰国/学东西教程#3"
+   ],
+   "dimensions": [
+    "learn_howto"
+   ]
+  }
+ ],
+ "region_comparison": [
+  {
+   "region": "拉美",
+   "observations": 61,
+   "social_occupancy_pct": 24.6,
+   "low_quality_pct": 1.6,
+   "distinct_top1_sellers": 37,
+   "concentration_pct": 62.3,
+   "top_sellers": [
+    "Google LLC(4)",
+    "SHAREit Technologies Co. Ltd(4)",
+    "AppChocolate Ltd.(3)",
+    "Andreia Assis Soares da Conceicao(3)",
+    "OpenTable, Inc.(3)"
+   ]
+  },
+  {
+   "region": "北美",
+   "observations": 50,
+   "social_occupancy_pct": 16,
+   "low_quality_pct": 0,
+   "distinct_top1_sellers": 36,
+   "concentration_pct": 52,
+   "top_sellers": [
+    "BuzzFeed(3)",
+    "Vacation and Travel Planner App LLC(3)",
+    "Apple Inc.(2)",
+    "New Leaf Publishing, Inc.(2)",
+    "I Teach Tiny Humans, LLC(2)"
+   ]
+  },
+  {
+   "region": "东南亚",
+   "observations": 95,
+   "social_occupancy_pct": 23.2,
+   "low_quality_pct": 4.2,
+   "distinct_top1_sellers": 65,
+   "concentration_pct": 51.6,
+   "top_sellers": [
+    "Vacation and Travel Planner App LLC(5)",
+    "Leap Health Fitness Limited(5)",
+    "COOKPAD INC. (CA)(4)",
+    "Pinterest, Inc.(3)",
+    "AMZN Mobile LLC(3)"
+   ]
+  },
+  {
+   "region": "西欧",
+   "observations": 94,
+   "social_occupancy_pct": 19.1,
+   "low_quality_pct": 1.1,
+   "distinct_top1_sellers": 67,
+   "concentration_pct": 46.8,
+   "top_sellers": [
+    "Trustpilot AS(4)",
+    "Bumble Holding Limited(4)",
+    "Google LLC(4)",
+    "Twelve APP(3)",
+    "Pinterest, Inc.(3)"
+   ]
+  },
+  {
+   "region": "中东",
+   "observations": 80,
+   "social_occupancy_pct": 17.5,
+   "low_quality_pct": 1.3,
+   "distinct_top1_sellers": 60,
+   "concentration_pct": 43.8,
+   "top_sellers": [
+    "LIKEME PTE. LTD.(3)",
+    "SEVDE SAVAS(3)",
+    "Paride Di Lazzaro(3)",
+    "Fizz Social Corp.(3)",
+    "Leap Health Fitness Limited(3)"
+   ]
+  },
+  {
+   "region": "非洲",
+   "observations": 48,
+   "social_occupancy_pct": 35.4,
+   "low_quality_pct": 2.1,
+   "distinct_top1_sellers": 37,
+   "concentration_pct": 43.8,
+   "top_sellers": [
+    "Pinterest, Inc.(3)",
+    "BuzzFeed(2)",
+    "TripIt Inc(2)",
+    "Zomato Media Pvt. Ltd.(2)",
+    "AIBY Incorporated(2)"
+   ]
+  },
+  {
+   "region": "东欧",
+   "observations": 45,
+   "social_occupancy_pct": 24.4,
+   "low_quality_pct": 2.2,
+   "distinct_top1_sellers": 36,
+   "concentration_pct": 37.8,
+   "top_sellers": [
+    "Badoo Software Ltd(3)",
+    "FITNESS ONLINE MChJ(2)",
+    "Snap, Inc.(2)",
+    "LIKEME PTE. LTD.(2)",
+    "Homify Online GmbH & Co. KG(2)"
+   ]
+  },
+  {
+   "region": "大洋洲",
+   "observations": 32,
+   "social_occupancy_pct": 25,
+   "low_quality_pct": 0,
+   "distinct_top1_sellers": 27,
+   "concentration_pct": 31.3,
+   "top_sellers": [
+    "Pinterest, Inc.(2)",
+    "BuzzFeed(2)",
+    "Brandefy, Inc.(2)",
+    "Bumble Holding Limited(2)",
+    "Houzz Inc.(2)"
+   ]
+  },
+  {
+   "region": "东亚",
+   "observations": 67,
+   "social_occupancy_pct": 17.9,
+   "low_quality_pct": 0,
+   "distinct_top1_sellers": 56,
+   "concentration_pct": 28.4,
+   "top_sellers": [
+    "STORYMATRIX PTE. LTD(3)",
+    "Kakaku.com, Inc.(3)",
+    "Room Planner Ltd(3)",
+    "SmartNews, Inc.(2)",
+    "Kurashiru, Inc(2)"
+   ]
+  },
+  {
+   "region": "南亚",
+   "observations": 32,
+   "social_occupancy_pct": 31.3,
+   "low_quality_pct": 0,
+   "distinct_top1_sellers": 30,
+   "concentration_pct": 12.5,
+   "top_sellers": [
+    "Pinterest, Inc.(2)",
+    "Vett LLC(2)",
+    "Inshorts Pte. Ltd.(1)",
+    "Twelve APP(1)",
+    "MOHALLA TECH PRIVATE LIMITED(1)"
+   ]
+  }
+ ],
+ "rating_momentum": []
+}

@@ -1,0 +1,192 @@
+{
+  "_doc": "心智词库。dimension=心智维度; group=归并组(便于后期合并近义维度); terms=按语言的检索词, 缺省用 en。lang_by_cc 决定各国用哪套词。",
+  "lang_by_cc": {
+    "us": "en", "ca": "en", "gb": "en", "au": "en", "nz": "en", "sg": "en",
+    "in": "en", "pk": "en", "bd": "en", "za": "en", "ng": "en", "ke": "en",
+    "il": "en", "nl": "en", "my": "en", "ph": "en",
+    "jp": "ja", "kr": "ko", "tw": "zh", "hk": "zh",
+    "id": "id", "th": "th", "vn": "vi",
+    "de": "de", "fr": "fr", "it": "it", "es": "es",
+    "mx": "es", "br": "pt", "ar": "es", "cl": "es", "co": "es",
+    "ae": "ar", "sa": "ar", "eg": "ar", "tr": "tr",
+    "pl": "pl", "ru": "ru", "ua": "ru"
+  },
+  "dimensions": [
+    {
+      "dimension": "news_public",
+      "group": "信息公共场",
+      "cn": "新闻与公共议题",
+      "terms": {
+        "en": "news", "ja": "ニュース", "ko": "뉴스", "zh": "新聞",
+        "id": "berita", "th": "ข่าว", "vi": "tin tức",
+        "de": "nachrichten", "fr": "actualités", "it": "notizie", "es": "noticias",
+        "pt": "notícias", "ar": "أخبار", "tr": "haberler", "pl": "wiadomości", "ru": "новости"
+      }
+    },
+    {
+      "dimension": "chat_friends",
+      "group": "私域沟通",
+      "cn": "与朋友聊天",
+      "terms": {
+        "en": "chat with friends", "ja": "友達 チャット", "ko": "친구 채팅", "zh": "朋友 聊天",
+        "id": "chat teman", "th": "แชท เพื่อน", "vi": "nhắn tin bạn bè",
+        "de": "freunde chat", "fr": "discuter amis", "it": "chat amici", "es": "chat amigos",
+        "pt": "conversar amigos", "ar": "محادثة أصدقاء", "tr": "arkadaş sohbet", "pl": "czat znajomi", "ru": "чат друзья"
+      }
+    },
+    {
+      "dimension": "short_video",
+      "group": "视频消费",
+      "cn": "看短视频",
+      "terms": {
+        "en": "short videos", "ja": "ショート動画", "ko": "숏폼 영상", "zh": "短影音",
+        "id": "video pendek", "th": "วิดีโอสั้น", "vi": "video ngắn",
+        "de": "kurzvideos", "fr": "vidéos courtes", "it": "video brevi", "es": "videos cortos",
+        "pt": "vídeos curtos", "ar": "فيديوهات قصيرة", "tr": "kısa video", "pl": "krótkie filmy", "ru": "короткие видео"
+      }
+    },
+    {
+      "dimension": "share_photos",
+      "group": "内容表达",
+      "cn": "分享照片",
+      "terms": {
+        "en": "share photos", "ja": "写真 共有", "ko": "사진 공유", "zh": "照片 分享",
+        "id": "bagikan foto", "th": "แชร์รูป", "vi": "chia sẻ ảnh",
+        "de": "fotos teilen", "fr": "partager photos", "it": "condividere foto", "es": "compartir fotos",
+        "pt": "compartilhar fotos", "ar": "مشاركة الصور", "tr": "fotoğraf paylaş", "pl": "udostępnij zdjęcia", "ru": "поделиться фото"
+      }
+    },
+    {
+      "dimension": "discover_inspiration",
+      "group": "灵感发现",
+      "cn": "找灵感",
+      "terms": {
+        "en": "inspiration ideas", "ja": "アイデア 発見", "ko": "아이디어 영감", "zh": "靈感",
+        "id": "inspirasi ide", "th": "ไอเดีย แรงบันดาลใจ", "vi": "ý tưởng cảm hứng",
+        "de": "inspiration ideen", "fr": "inspiration idées", "it": "ispirazione idee", "es": "inspiración ideas",
+        "pt": "inspiração ideias", "ar": "إلهام أفكار", "tr": "ilham fikir", "pl": "inspiracje pomysły", "ru": "идеи вдохновение"
+      }
+    },
+    {
+      "dimension": "recipes",
+      "group": "生活决策",
+      "cn": "做饭找菜谱",
+      "terms": {
+        "en": "recipes", "ja": "レシピ", "ko": "레시피", "zh": "食譜",
+        "id": "resep masakan", "th": "สูตรอาหาร", "vi": "công thức nấu ăn",
+        "de": "rezepte", "fr": "recettes", "it": "ricette", "es": "recetas",
+        "pt": "receitas", "ar": "وصفات طبخ", "tr": "yemek tarifleri", "pl": "przepisy", "ru": "рецепты"
+      }
+    },
+    {
+      "dimension": "travel_plan",
+      "group": "生活决策",
+      "cn": "旅行做攻略",
+      "terms": {
+        "en": "travel itinerary", "ja": "旅行 プラン", "ko": "여행 계획", "zh": "旅遊 行程",
+        "id": "rencana wisata", "th": "แผนเที่ยว", "vi": "kế hoạch du lịch",
+        "de": "reiseplanung", "fr": "itinéraire voyage", "it": "itinerario viaggio", "es": "itinerario viaje",
+        "pt": "roteiro viagem", "ar": "خطة سفر", "tr": "gezi planı", "pl": "plan podróży", "ru": "план поездки"
+      }
+    },
+    {
+      "dimension": "restaurant",
+      "group": "生活决策",
+      "cn": "找餐厅",
+      "terms": {
+        "en": "restaurant reviews", "ja": "グルメ 口コミ", "ko": "맛집", "zh": "餐廳 評價",
+        "id": "kuliner review", "th": "ร้านอาหาร รีวิว", "vi": "đánh giá nhà hàng",
+        "de": "restaurant bewertungen", "fr": "avis restaurants", "it": "recensioni ristoranti", "es": "reseñas restaurantes",
+        "pt": "avaliações restaurantes", "ar": "تقييم مطاعم", "tr": "restoran yorumları", "pl": "opinie restauracje", "ru": "отзывы рестораны"
+      }
+    },
+    {
+      "dimension": "beauty_skincare",
+      "group": "生活决策",
+      "cn": "护肤美妆测评",
+      "terms": {
+        "en": "skincare reviews", "ja": "スキンケア 口コミ", "ko": "화장품 리뷰", "zh": "美妝 評價",
+        "id": "review skincare", "th": "รีวิว สกินแคร์", "vi": "đánh giá mỹ phẩm",
+        "de": "hautpflege bewertungen", "fr": "avis soins peau", "it": "recensioni skincare", "es": "reseñas cuidado piel",
+        "pt": "avaliações skincare", "ar": "مراجعات العناية بالبشرة", "tr": "cilt bakım yorum", "pl": "opinie pielęgnacja", "ru": "отзывы уход кожа"
+      }
+    },
+    {
+      "dimension": "shopping_deals",
+      "group": "消费决策",
+      "cn": "购物比价",
+      "terms": {
+        "en": "shopping deals", "ja": "ショッピング セール", "ko": "쇼핑 할인", "zh": "購物 優惠",
+        "id": "belanja diskon", "th": "ช้อปปิ้ง ส่วนลด", "vi": "mua sắm giảm giá",
+        "de": "shopping angebote", "fr": "achats promotions", "it": "shopping offerte", "es": "compras ofertas",
+        "pt": "compras ofertas", "ar": "تسوق عروض", "tr": "alışveriş indirim", "pl": "zakupy oferty", "ru": "покупки скидки"
+      }
+    },
+    {
+      "dimension": "product_review",
+      "group": "消费决策",
+      "cn": "买东西看测评",
+      "terms": {
+        "en": "product reviews", "ja": "商品 レビュー", "ko": "제품 리뷰", "zh": "商品 評測",
+        "id": "ulasan produk", "th": "รีวิว สินค้า", "vi": "đánh giá sản phẩm",
+        "de": "produktbewertungen", "fr": "avis produits", "it": "recensioni prodotti", "es": "reseñas productos",
+        "pt": "avaliações produtos", "ar": "مراجعات المنتجات", "tr": "ürün yorumları", "pl": "opinie produktów", "ru": "отзывы товаров"
+      }
+    },
+    {
+      "dimension": "learn_howto",
+      "group": "知识获取",
+      "cn": "学东西教程",
+      "terms": {
+        "en": "how to tutorials", "ja": "使い方 講座", "ko": "배우기 강의", "zh": "教學",
+        "id": "tutorial belajar", "th": "สอน วิธี", "vi": "hướng dẫn học",
+        "de": "anleitungen lernen", "fr": "tutoriels apprendre", "it": "tutorial imparare", "es": "tutoriales aprender",
+        "pt": "tutoriais aprender", "ar": "دروس تعليمية", "tr": "nasıl yapılır", "pl": "poradniki nauka", "ru": "уроки обучение"
+      }
+    },
+    {
+      "dimension": "local_community",
+      "group": "本地社群",
+      "cn": "本地社群",
+      "terms": {
+        "en": "local community", "ja": "地域 コミュニティ", "ko": "지역 커뮤니티", "zh": "本地 社群",
+        "id": "komunitas lokal", "th": "ชุมชน ท้องถิ่น", "vi": "cộng đồng địa phương",
+        "de": "lokale gemeinschaft", "fr": "communauté locale", "it": "comunità locale", "es": "comunidad local",
+        "pt": "comunidade local", "ar": "مجتمع محلي", "tr": "yerel topluluk", "pl": "społeczność lokalna", "ru": "местное сообщество"
+      }
+    },
+    {
+      "dimension": "dating",
+      "group": "关系建立",
+      "cn": "交友约会",
+      "terms": {
+        "en": "dating", "ja": "出会い マッチング", "ko": "소개팅 데이팅", "zh": "交友",
+        "id": "kencan", "th": "หาคู่ เดท", "vi": "hẹn hò",
+        "de": "dating", "fr": "rencontres", "it": "incontri", "es": "citas",
+        "pt": "namoro", "ar": "تعارف", "tr": "arkadaş bulma", "pl": "randki", "ru": "знакомства"
+      }
+    },
+    {
+      "dimension": "fitness",
+      "group": "生活决策",
+      "cn": "健身运动",
+      "terms": {
+        "en": "workout plan", "ja": "筋トレ", "ko": "홈트 운동", "zh": "健身",
+        "id": "olahraga latihan", "th": "ออกกำลังกาย", "vi": "tập luyện",
+        "de": "fitness training", "fr": "entraînement fitness", "it": "allenamento fitness", "es": "entrenamiento fitness",
+        "pt": "treino fitness", "ar": "تمارين رياضية", "tr": "antrenman", "pl": "trening fitness", "ru": "тренировки"
+      }
+    },
+    {
+      "dimension": "home_decor",
+      "group": "生活决策",
+      "cn": "家居装修",
+      "terms": {
+        "en": "home decor ideas", "ja": "インテリア", "ko": "인테리어", "zh": "室內設計",
+        "id": "dekorasi rumah", "th": "แต่งบ้าน", "vi": "trang trí nhà",
+        "de": "wohnideen einrichtung", "fr": "décoration maison", "it": "arredamento casa", "es": "decoración hogar",
+        "pt": "decoração casa", "ar": "ديكور منزل", "tr": "ev dekorasyon", "pl": "wystrój wnętrz", "ru": "дизайн интерьера"
+      }
+    }
+  ]
+}

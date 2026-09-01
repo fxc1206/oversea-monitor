@@ -1,0 +1,20 @@
+{
+  "_doc": "竞品清单。search_term 用于按国家解析真实 trackId(同一App跨国ID不同, 已实测: TikTok 美区835599320 / 日印尼1235601864)。seller_hint 用于校验解析结果是否为正主, 防止搜到山寨。",
+  "tracked_apps": [
+    {"key": "threads",    "cn": "Threads",       "search_term": "Threads",   "seller_hint": "Instagram",  "known_ids": {"us": 6446901002}},
+    {"key": "instagram",  "cn": "Instagram",     "search_term": "Instagram", "seller_hint": "Instagram",  "known_ids": {"us": 389801252}},
+    {"key": "tiktok",     "cn": "TikTok",        "search_term": "TikTok",    "seller_hint": "TIKTOK",     "known_ids": {"us": 835599320, "jp": 1235601864}},
+    {"key": "lemon8",     "cn": "Lemon8",        "search_term": "Lemon8",    "seller_hint": "TIKTOK",     "known_ids": {"us": 1498607143}},
+    {"key": "x",          "cn": "X (Twitter)",   "search_term": "X Twitter", "seller_hint": "X Corp",     "known_ids": {"us": 333903271}},
+    {"key": "snapchat",   "cn": "Snapchat",      "search_term": "Snapchat",  "seller_hint": "Snap",       "known_ids": {"us": 447188370}},
+    {"key": "bereal",     "cn": "BeReal",        "search_term": "BeReal",    "seller_hint": "BeReal",     "known_ids": {"us": 1459645446}},
+    {"key": "pinterest",  "cn": "Pinterest",     "search_term": "Pinterest", "seller_hint": "Pinterest",  "known_ids": {"us": 429047995}},
+    {"key": "reddit",     "cn": "Reddit",        "search_term": "Reddit",    "seller_hint": "Reddit",     "known_ids": {"us": 1064216828}},
+    {"key": "xiaohongshu","cn": "小红书/RedNote", "search_term": "RedNote",   "seller_hint": "",           "known_ids": {}},
+    {"key": "bluesky",    "cn": "Bluesky",       "search_term": "Bluesky",   "seller_hint": "Bluesky",    "known_ids": {}}
+  ],
+  "_social_regex_doc": "用于判定某需求词搜索结果中是否有社交/内容社区产品占位。刻意排除纯工具与游戏。",
+  "social_regex": "instagram|tiktok|pinterest|threads|lemon8|xiaohongshu|rednote|red ?note|snapchat|facebook|twitter|^x$|reddit|youtube|\\bline\\b|kakao|weibo|bilibili|bluesky|douyin|zhihu|naver|discord|telegram|whatsapp|tumblr|quora|nextdoor|vk\\b|dcard|ptt",
+  "_game_regex_doc": "游戏类噪声, 命中则标记该市场该词信号质量低(泰国实测: 餐厅词搜出 My Hot Pot Story 等游戏)。",
+  "game_regex": "game|games|simulator|madness|story$|tycoon|puzzle|toca boca|makeover|salon|dress ?up|farm|cooking fever|ASMR"
+}

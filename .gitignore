@@ -1,0 +1,9 @@
+# 原始响应缓存：体积大（单日约 80MB）且可重新获取，不入版本库。
+# 快照 data/snapshots/ 必须提交 —— 那是逐步积累的时间序列，不可再生。
+data/raw/
+
+node_modules/
+.DS_Store
+*.log
+
+# workflow 需 token 带 workflow scope 才能推送，见 DEPLOY.md
