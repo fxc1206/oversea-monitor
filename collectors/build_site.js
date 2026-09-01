@@ -149,13 +149,16 @@ function main() {
   const PALETTE = ['#E60023','#F7B500','#7B4DFF','#00B551','#FF6B00','#4285F4','#FE3C72','#00C2A8',
                    '#C13584','#9B6BFF','#FF7A00','#1FA98C','#2D6FE0','#8C6FE0','#FF3E6C','#5CB85C'];
   const MINOR_COLOR = '#9aa6c4'; // 1-2 格的单点占位
+  // 门槛设在 5 格：≥5 格的 8 个品牌覆盖 64 格，是版图主干；
+  // 3-4 格的中间层归入长尾，避免 16 种颜色互相干扰导致整张图杂乱。
+  const COLOR_MIN_CELLS = 5;
   const brandColor = {};
   let pi = 0;
   for (const h of holders) {
-    if (h.n < 3) continue;
+    if (h.n < COLOR_MIN_CELLS) continue;
     brandColor[h.bd] = BRAND_COLORS[h.bd] || PALETTE[pi++ % PALETTE.length];
   }
-  const brandLegend = holders.filter((h) => h.n >= 3)
+  const brandLegend = holders.filter((h) => h.n >= COLOR_MIN_CELLS)
     .map((h) => ({ bd: h.bd, c: brandColor[h.bd], n: h.n, mn: h.mn }));
   const metricSlim = metrics.rows.filter((r) => r.listed).map((r) => ({
     app: r.app, cn: r.app_cn, rg: r.region, cc: r.cc, mk: r.market,
@@ -179,6 +182,19 @@ function main() {
     mind: mindSlim,
     metrics: metricSlim,
     holders: holders,
+    dimGroups: (function () {
+      // 把维度按业务大类归组并固定顺序，让矩阵列有语义结构、可加分割线
+      const seq = ['私域沟通', '内容表达', '视频消费', '信息公共场', '灵感发现',
+                   '生活决策', '消费决策', '知识获取', '本地社群', '关系建立'];
+      const byGroup = {};
+      for (const d of R.dimension_occupancy) {
+        const row = mindSlim.find((r) => r.dim === d.dimension);
+        const g = row ? row.gp : '其他';
+        (byGroup[g] = byGroup[g] || []).push(d.dimension);
+      }
+      const ordered = seq.filter((g) => byGroup[g]).concat(Object.keys(byGroup).filter((g) => seq.indexOf(g) < 0));
+      return ordered.map((g) => ({ g: g, dims: byGroup[g] }));
+    })(),
     brandColor: brandColor,
     brandLegend: brandLegend,
     minorColor: MINOR_COLOR,
@@ -200,11 +216,13 @@ function main() {
 :root{
   --bg:#f4f6fb; --card:#fff; --ink:#1a2340; --ink2:#4a5a8a; --ink3:#8b97b8;
   --line:#e6ebf5; --primary:#4D7EFF; --purple:#7B61FF; --teal:#00d4aa;
+  --sep-col:#ccd6ea; --sep-row:#aab8d4;
   --amber:#F0A500; --red:#e05c5c; --shadow:0 1px 3px rgba(26,35,64,.06),0 8px 24px rgba(26,35,64,.05);
 }
 @media (prefers-color-scheme:dark){
   :root{ --bg:#0f1420; --card:#181f30; --ink:#e8ecf5; --ink2:#a3b0cc; --ink3:#6b78a0;
-    --line:#26304a; --shadow:0 1px 3px rgba(0,0,0,.3),0 8px 24px rgba(0,0,0,.25); }
+    --line:#26304a; --sep-col:#39456580; --sep-row:#4a5878;
+    --shadow:0 1px 3px rgba(0,0,0,.3),0 8px 24px rgba(0,0,0,.25); }
 }
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--ink);
@@ -273,6 +291,19 @@ td b{color:var(--ink);font-weight:600}
 .mx.named th{height:84px;padding-bottom:5px}
 .mx.named th.corner{height:84px}
 .mx th.corner .csub{writing-mode:horizontal-tb;font-size:9.5px;font-weight:400;color:var(--ink3);margin-top:2px}
+/* 大类分组行：横排标签 + 底部细线界定范围 */
+.mx .grow td{padding:0 0 4px;border:0;vertical-align:bottom}
+.mx .grow .gcorner{position:sticky;left:0;background:var(--card);z-index:2}
+.mx .grow .gh{text-align:center}
+.mx .grow .gh span{display:inline-block;font-size:9.5px;font-weight:700;color:var(--ink2);
+  letter-spacing:.3px;padding:0 4px 3px;border-bottom:2px solid var(--line);width:calc(100% - 6px);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+/* 竖分割线（心智大类）：偏冷的实线，和区域线区分层级 */
+.mx th.gsep, .mx td.gsep{border-left:1.5px solid var(--sep-col)!important;padding-left:5px}
+.mx .grow .gh + .gh{border-left:1.5px solid var(--sep-col)}
+/* 横分割线（区域）：更重，带区域名，作为一级分组 */
+.mx .rgrow td.rg{border-top:2.5px solid var(--sep-row);padding-top:11px}
+.mx .rgrow.first td.rg{border-top:0;padding-top:3px}
 /* 搜索词行：横排在列头下方，让每列口径可直读 */
 .mx .trow td{padding:0 2px 5px;border:0;vertical-align:top}
 .mx .trow .tcorner{position:sticky;left:0;background:var(--card);z-index:2;white-space:nowrap;
@@ -531,8 +562,13 @@ function mk(id, opt){ try{ var el=document.getElementById(id); if(!el) return;
 })();
 
 // 共享：心智维度序列与中文名（矩阵一 / 产品视角矩阵共用）
-var dims = D.dims.map(function(d){return d.dimension});
 var dimCn = {}; D.dims.forEach(function(d){ dimCn[d.dimension]=d.dimension_cn; });
+// 列顺序按业务大类重排，使同类心智相邻，分割线才有语义
+var dims=[], dimGroup={}, groupFirst={}, groupSpan=[];
+(D.dimGroups||[{g:'全部',dims:D.dims.map(function(d){return d.dimension})}]).forEach(function(g){
+  groupSpan.push({g:g.g, n:g.dims.length});
+  g.dims.forEach(function(d,i){ dims.push(d); dimGroup[d]=g.g; if(i===0) groupFirst[d]=true; });
+});
 
 // 5. 矩阵一：需求入口归属
 (function(){
@@ -570,26 +606,31 @@ var dimCn = {}; D.dims.forEach(function(d){ dimCn[d.dimension]=d.dimension_cn; }
     var mode=sel.value, rg=selR.value;
     var list = order.filter(function(m){ return box[m] && (!rg || regionOf[m]===rg); });
     var named=(mode==='occ'||mode==='brand');
-    var h='<table class="mx'+(named?' named':'')+'"><thead><tr><th class="corner">市场<div class="csub">格内＝首位产品</div></th>';
+    var h='<table class="mx'+(named?' named':'')+'"><thead>';
+    // 大类分组行：让 16 列有语义结构
+    h+='<tr class="grow"><td class="gcorner"></td>';
+    groupSpan.forEach(function(g){ h+='<td class="gh" colspan="'+g.n+'"><span>'+g.g+'</span></td>'; });
+    h+='</tr>';
+    h+='<tr><th class="corner">市场<div class="csub">格内＝首位产品</div></th>';
     var terms={};
     dims.forEach(function(d){
       // 该维度在当前筛选市场里最常用的搜索词，用于列头 title 与下方口径行
       var tc={}; list.forEach(function(m){ var rr=box[m]&&box[m][d]; if(rr&&rr.tm) tc[rr.tm]=(tc[rr.tm]||0)+1; });
       var tw=Object.entries(tc).sort(function(a,b){return b[1]-a[1]})[0];
       terms[d]=tw?tw[0]:'';
-      h+='<th title="'+dimCn[d]+(tw?' · 搜索词：'+tw[0]:'')+'">'+dimCn[d]+'</th>';
+      h+='<th class="'+(groupFirst[d]?'gsep':'')+'" title="'+dimCn[d]+(tw?' · 搜索词：'+tw[0]:'')+'">'+dimCn[d]+'</th>';
     });
     h+='</tr>';
     if(named){
       h+='<tr class="trow"><td class="tcorner">搜索词</td>';
-      dims.forEach(function(d){ h+='<td class="tm" title="'+(terms[d]||'')+'"><span>'+String(terms[d]||'—').replace(/</g,'&lt;')+'</span></td>'; });
+      dims.forEach(function(d){ h+='<td class="tm'+(groupFirst[d]?' gsep':'')+'" title="'+(terms[d]||'')+'"><span>'+String(terms[d]||'—').replace(/</g,'&lt;')+'</span></td>'; });
       h+='</tr>';
     }
     h+='</thead><tbody>';
     var curRg='';
     list.forEach(function(m){
-      if(!rg && regionOf[m]!==curRg){ curRg=regionOf[m];
-        h+='<tr class="rgrow"><td class="rg" colspan="'+(dims.length+1)+'">'+curRg+'</td></tr>'; }
+      if(!rg && regionOf[m]!==curRg){ var firstRg=(curRg===''); curRg=regionOf[m];
+        h+='<tr class="rgrow'+(firstRg?' first':'')+'"><td class="rg" colspan="'+(dims.length+1)+'">'+curRg+'</td></tr>'; }
       h+='<tr><td class="mk">'+m+'</td>';
       dims.forEach(function(d){
         var r=box[m][d], col='', txt='', tip=m+' · '+dimCn[d];
@@ -622,7 +663,7 @@ var dimCn = {}; D.dims.forEach(function(d){ dimCn[d.dimension]=d.dimension_cn; }
           tip+=' · '+(r.sr?'社交最高 #'+r.sr+(r.sn?' '+r.sn:''):'前10无社交产品');
         }
         var isName = ((mode==='occ'||mode==='brand') && txt.length>2);
-        h+='<td><div class="cl'+(col?'':' e')+(isName?' nm':'')+'" style="'+(col?'background:'+col:'')+'" title="'+tip.replace(/"/g,'')+'">'
+        h+='<td class="'+(groupFirst[d]?'gsep':'')+'"><div class="cl'+(col?'':' e')+(isName?' nm':'')+'" style="'+(col?'background:'+col:'')+'" title="'+tip.replace(/"/g,'')+'">'
           + (isName?'<span>'+txt.replace(/</g,'&lt;')+'</span>':txt) + '</div></td>';
       });
       h+='</tr>';
@@ -724,9 +765,13 @@ var dimCn = {}; D.dims.forEach(function(d){ dimCn[d.dimension]=d.dimension_cn; }
     if(!list.length){ document.getElementById('mx_h').innerHTML='<div style="padding:20px;color:var(--ink3);font-size:13px">无匹配占位方</div>'; return; }
     var cap = kw?list.length:Math.min(list.length,30);
     list=list.slice(0,cap);
-    var h='<table class="mx mx3"><thead><tr><th class="corner">占位方</th>';
-    dims.forEach(function(d){ h+='<th>'+dimCn[d]+'</th>'; });
-    h+='<th class="tot">格数</th><th class="tot">市场</th></tr></thead><tbody>';
+    var h='<table class="mx mx3"><thead>';
+    h+='<tr class="grow"><td class="gcorner"></td>';
+    groupSpan.forEach(function(g){ h+='<td class="gh" colspan="'+g.n+'"><span>'+g.g+'</span></td>'; });
+    h+='<td colspan="2"></td></tr>';
+    h+='<tr><th class="corner">占位方</th>';
+    dims.forEach(function(d){ h+='<th class="'+(groupFirst[d]?'gsep':'')+'">'+dimCn[d]+'</th>'; });
+    h+='<th class="tot gsep">格数</th><th class="tot">市场</th></tr></thead><tbody>';
     list.forEach(function(o){
       var dmap={}; o.dims.forEach(function(x){ dmap[x.d]=x.n; });
       h+='<tr><td class="mk hd" title="'+o.bd.replace(/"/g,'')+'">'+o.bd.replace(/</g,'&lt;')+'</td>';
@@ -734,9 +779,9 @@ var dimCn = {}; D.dims.forEach(function(d){ dimCn[d.dimension]=d.dimension_cn; }
         var n=dmap[dimCn[d]]||0;
         var col = n===0?'':n>=8?'#0f5f50':n>=4?'#1e7f6b':n>=2?'#3d9e88':'#8fc9bd';
         var tip=o.bd+' · '+dimCn[d]+' · '+(n?n+' 个市场':'无占位');
-        h+='<td><div class="cl'+(col?'':' e')+'" style="'+(col?'background:'+col:'')+'" title="'+tip.replace(/"/g,'')+'">'+(n||'')+'</div></td>';
+        h+='<td class="'+(groupFirst[d]?'gsep':'')+'"><div class="cl'+(col?'':' e')+'" style="'+(col?'background:'+col:'')+'" title="'+tip.replace(/"/g,'')+'">'+(n||'')+'</div></td>';
       });
-      h+='<td class="tot">'+o.n+'</td><td class="tot">'+o.mn+'</td></tr>';
+      h+='<td class="tot gsep">'+o.n+'</td><td class="tot">'+o.mn+'</td></tr>';
     });
     document.getElementById('mx_h').innerHTML=h+'</tbody></table>';
     document.getElementById('lg_h').innerHTML=
