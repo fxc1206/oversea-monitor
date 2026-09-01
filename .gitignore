@@ -7,3 +7,6 @@ node_modules/
 *.log
 
 # workflow 需 token 带 workflow scope 才能推送，见 DEPLOY.md
+
+# workflow 需要带 workflow scope 的 token 才能推送，内容见 DEPLOY.md 附录
+.github/
