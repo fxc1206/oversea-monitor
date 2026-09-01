@@ -105,19 +105,28 @@ Pages 的目录设置要选 `/docs` 而不是根目录。另外首次发布有 1
 
 ---
 
-## 附录：daily.yml 完整内容
+## 附录：daily.yml（每日自动采集工作流）
 
-需 token 带 `workflow` scope 才能推送。保存到 `.github/workflows/daily.yml`：
+这个文件**没有推送到仓库**，因为推送 `.github/workflows/` 需要 token 带 `workflow` scope，
+而当前部署用的 token 只有 `repo`。要启用全自动采集，按以下步骤操作：
+
+1. 生成新 token：GitHub → Settings → Developer settings → Personal access tokens → Tokens (classic)
+   → Generate new token，勾选 **`repo` + `workflow`** 两个 scope
+2. 在仓库里手动创建文件 `.github/workflows/daily.yml`（网页端直接新建也可以），粘贴下面内容
+3. 提交后，Actions 页面会出现「每日采集与部署」，可以点 **Run workflow** 手动跑一次验证
+4. 之后每天北京时间 09:30 自动运行（Actions 的 cron 有几分钟到几十分钟抖动，正常）
+
+启用后每天会自动：采集三层数据 → 存档追加 → 重建看板 → 提交推送。
+**趋势满 2 天快照就会自动出现在「数据存档 · 趋势积累」区块。**
 
 ```yaml
-name: 每日采集并发布看板
+name: 每日采集与部署
 
-# GitHub Actions 的 runner 在境外，网络出口通常比本地更顺畅。
-# 如果 Actions 被限流，把 schedule 注释掉、改成本地跑 + git push 即可。
 on:
   schedule:
-    - cron: '0 1 * * *'   # UTC 01:00 = 北京时间 09:00
-  workflow_dispatch:       # 支持手动触发
+    # 北京时间 09:30（UTC 01:30）。Actions 的 cron 有几分钟到几十分钟抖动，正常现象。
+    - cron: '30 1 * * *'
+  workflow_dispatch: {}   # 支持手动触发
 
 permissions:
   contents: write
@@ -125,46 +134,77 @@ permissions:
   id-token: write
 
 concurrency:
-  group: pages
+  group: daily-collect
   cancel-in-progress: false
 
 jobs:
-  collect-and-build:
+  collect:
     runs-on: ubuntu-latest
+    timeout-minutes: 90
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
 
-      - name: 采集心智占位数据
-        run: node collectors/mindshare.js --limit 10
+      - name: 采集榜单动能
         env:
-          OM_INTERVAL_MS: 1500
+          OM_INTERVAL_MS: '1500'
+        run: node collectors/charts.js --limit 100
+
+      - name: 采集需求词心智
+        env:
+          OM_INTERVAL_MS: '1500'
+        run: node collectors/mindshare.js --limit 10
 
       - name: 采集竞品指标
-        run: node collectors/app_metrics.js
         env:
-          OM_INTERVAL_MS: 1500
+          OM_INTERVAL_MS: '1500'
+        run: node collectors/app_metrics.js
 
       - name: 生成报告
         run: node collectors/report.js
 
-      - name: 构建静态站点
+      - name: 构建看板
         run: node collectors/build_site.js
 
-      - name: 提交数据快照
+      - name: 校验产物
+        run: |
+          test -s docs/index.html || { echo "index.html 为空"; exit 1; }
+          node -e "
+            const fs=require('fs');
+            const h=fs.readFileSync('docs/index.html','utf8');
+            const m=h.match(/<script>([\s\S]*?)<\/script>/);
+            if(!m) { console.error('未找到内联脚本'); process.exit(1); }
+            new Function(m[1]);
+            console.log('产物校验通过 ' + (h.length/1024).toFixed(0) + ' KB');
+          "
+
+      - name: 提交存档
         run: |
           git config user.name  "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add data/snapshots reports docs
-          git diff --staged --quiet || git commit -m "chore: 每日数据采集 $(date -u +%Y-%m-%d)"
-          git push
-
-      - uses: actions/configure-pages@v4
-      - uses: actions/upload-pages-artifact@v3
-        with:
-          path: docs
-      - uses: actions/deploy-pages@v4
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if [ -n "$(git status --porcelain)" ]; then
+            git add -A
+            git commit -m "data: $(date -u +%F) 自动采集"
+            git push
+          else
+            echo "无变化，跳过提交"
+          fi
 ```
+
+### 不用 Actions 的替代方案
+
+仓库里已带 `daily.sh`，在任何常开的机器上挂 cron 即可：
+
+```bash
+crontab -e
+# 加一行（北京时间 09:30）
+30 9 * * * /绝对路径/oversea-monitor/daily.sh
+```
+
+注意容器环境里 cron 守护进程可能没启动（`pgrep -x cron` 无输出就是没跑），
+这种情况下本地 cron 不会触发，还是 Actions 更可靠。
