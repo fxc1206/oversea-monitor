@@ -326,7 +326,8 @@ td b{color:var(--ink);font-weight:600}
 .mx2 .cl{width:24px}
 .mx2 th{height:82px}
 .mx2 th.corner{height:82px}
-.ctrl{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.ctrl{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;align-items:center}
+.ctrlhint{font-size:11.5px;color:var(--ink3)}
 select,input{background:var(--card);color:var(--ink);border:1px solid var(--line);
   border-radius:8px;padding:7px 10px;font-size:13px;font-family:inherit}
 input{flex:1;min-width:160px}
@@ -388,21 +389,14 @@ ul.tight b{color:var(--ink)}
   <div class="card"><div id="c_regionbar" class="chart"></div></div>
 </div>
 
-<h2>心智占据矩阵</h2>
-<p class="h2sub">在每个国家的 App Store 用当地语言搜一个需求词，看谁排第一 —— 逐格显示搜的什么词</p>
-<div class="note src"><b>这张表的数据是什么。</b>不是下载量、不是 DAU，是 <b>iOS App Store 站内搜索结果</b>。做法：39 个国家 × 16 个需求词，用当地语言在该国商店搜索（entity=software，取前 10 名），记录首位产品及其评分数。<br>
-举例：日本「做饭找菜谱」格搜的是 <code>レシピ</code>，返回クラシル、クックパッド、デリッシュキッチン⋯首位クラシル 75.8 万评分，判定为「占住」。<br>
-<b>能回答：</b>用户在商店里搜这个需求，会先撞见谁。<b>不能回答：</b>用户实际用谁完成这件事 —— 那需要评论文本或用户调研。</div>
-<div class="note warn"><b>两个必须知道的边界。</b>① <b>「未见强占位」不等于「空位」</b>：排名由商店文案关键词匹配度主导，Pinterest 实际占着美国「找灵感」心智，但它的描述不写 inspiration ideas，就会被判成未见强占位。这个误报方向偏危险（让人以为有空位、进去撞上巨头）。② 判定加了体量门槛：<b>占住</b>＝首位体量高于该市场中位水平<b>且</b>领先第二名 ≥45%；<b>争夺中</b>＝有大玩家但格局未定；否则未见强占位。</div>
+<h2>需求词搜索结果 · 各市场首位产品</h2>
+<p class="h2sub">在每个国家的 App Store 用当地语言搜一个需求词，格内＝搜出来排第一的产品（搜索词见下方灰字行）</p>
+<div class="note warn"><b>不是市场份额。</b>排名由商店文案关键词匹配度决定，已成品类代名词的产品会缺席 —— TikTok 搜「short videos」在 41 国全部不是第一（它文案不写这个词），但搜 <code>tiktok</code> 稳居第一。空白格＝没有强势产品抢这个词，<b>不等于市场空位</b>。</div>
 <div class="card">
   <div class="ctrl">
-    <select id="m1_mode">
-      <option value="brand">上色方式：按占位产品（看各家势力范围）</option>
-      <option value="occ">上色方式：按占据强度（看占没占住）</option>
-      <option value="type">上色方式：按占位方类型（本土/国际/社交）</option>
-      <option value="social">上色方式：社交产品最高排名</option>
-    </select>
+    <select id="m1_mode" style="display:none"><option value="brand">brand</option></select>
     <select id="m1_region"><option value="">全部区域</option></select>
+    <span class="ctrlhint">同色＝同一产品，只给占位 ≥5 格的产品配色，其余归为单点占位</span>
   </div>
   <div class="scroll"><div id="mx1"></div></div>
   <div class="legend" id="lg1"></div>
@@ -687,7 +681,7 @@ var dims=[], dimGroup={}, groupFirst={}, groupSpan=[];
         return '<span title="'+b.bd+'：全球 '+b.n+' 格 / '+b.mn+' 国"><i style="background:'+b.c+'"></i>'
           + b.bd+' <b>'+used[b.bd]+'</b></span>'; }).join('')
         + (minorCells?'<span title="占位 1-2 格的长尾产品，未单独配色"><i style="background:'+D.minorColor+'"></i>单点占位 <b>'+minorCells+'</b>　<span style="opacity:.6">'+minor.length+' 个长尾产品</span></span>':'')
-        + '<span style="opacity:.6">数字＝当前视图下占位格数；斜纹＝未见强占位</span>';
+        + '<span style="opacity:.6">数字＝占位格数　斜纹＝无强势产品</span>';
     }
     else if(mode==='occ'){
       var cnt={occupied:0,contested:0,other:0};
