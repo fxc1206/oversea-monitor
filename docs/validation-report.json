@@ -1,0 +1,320 @@
+{
+  "checked_at": "2026-09-06T01:47:46.776519+00:00",
+  "status": "passed",
+  "mechanical_checks": [
+    {
+      "check": "reviewed_indices_contiguous",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "unique_record_ids",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "all_reviewed_text_hashes_match",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "fixed_queue_ids_unchanged",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "all_reviewed_text_matches_raw_capture",
+      "passed": true,
+      "detail": {
+        "matching": 1034
+      }
+    },
+    {
+      "check": "japanese_topic_anchor_and_original_text",
+      "passed": true,
+      "detail": {
+        "checked": 345,
+        "cached_pages": 14
+      }
+    },
+    {
+      "check": "focused_statistics_recomputed",
+      "passed": true,
+      "detail": [
+        {
+          "claim": "maps_food_sea",
+          "passed": true
+        },
+        {
+          "claim": "maps_verify_sea",
+          "passed": true
+        },
+        {
+          "claim": "maps_food_jp",
+          "passed": true
+        },
+        {
+          "claim": "tabelog_food_jp",
+          "passed": true
+        },
+        {
+          "claim": "maps_verify_jp",
+          "passed": true
+        },
+        {
+          "claim": "reddit_beauty_ph",
+          "passed": true
+        },
+        {
+          "claim": "pinterest_fashion",
+          "passed": true
+        },
+        {
+          "claim": "instagram_fashion",
+          "passed": true
+        },
+        {
+          "claim": "instagram_fashion_jp",
+          "passed": true
+        },
+        {
+          "claim": "maps_travel_br",
+          "passed": true
+        },
+        {
+          "claim": "tripadvisor_travel_br",
+          "passed": true
+        },
+        {
+          "claim": "nyt_food_nyc",
+          "passed": true
+        },
+        {
+          "claim": "eater_food_nyc",
+          "passed": true
+        },
+        {
+          "claim": "raindrop_saving",
+          "passed": true
+        },
+        {
+          "claim": "line_recipe",
+          "passed": true
+        },
+        {
+          "claim": "wa_sg",
+          "passed": true
+        },
+        {
+          "claim": "telegram_sg",
+          "passed": true
+        },
+        {
+          "claim": "tagesschau_news",
+          "passed": true
+        },
+        {
+          "claim": "reddit_news",
+          "passed": true
+        },
+        {
+          "claim": "yahoo_news_jp",
+          "passed": true
+        },
+        {
+          "claim": "girls_news_jp",
+          "passed": true
+        },
+        {
+          "claim": "x_news_jp",
+          "passed": true
+        },
+        {
+          "claim": "rednote_fashion_sg",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "check": "legacy_audit_partition",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "legacy_not_mixed_into_scenario_data",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "association_evidence_spans_match",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "anonymous_author_keys_not_merged",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "all_journeys_resolve_to_records",
+      "passed": true,
+      "detail": {
+        "paths": 19,
+        "distinct_comments": 18
+      }
+    },
+    {
+      "check": "previous_website_files_unchanged",
+      "passed": true,
+      "detail": null
+    }
+  ],
+  "source_audit": {
+    "recorded_at": "2026-09-05T17:03:24.806892+00:00",
+    "items": [
+      {
+        "record_index": 56,
+        "method": "Reopened original Reddit comment in authorized Chrome; rendered comment body read back",
+        "url": "https://www.reddit.com/r/askSingapore/comments/1vggbbs/comment/p1zg8x7/",
+        "status": "accessible",
+        "live_body_matches_archived_body": true,
+        "archived_body_sha256": "7dd7fd73d8920dedd4bfd7668c912928fdfda9eac381bb3389fd10a8638cba4d"
+      },
+      {
+        "record_index": 167,
+        "method": "Reopened original Reddit comment in authorized Chrome; rendered comment body read back",
+        "url": "https://www.reddit.com/r/beautytalkph/comments/1d7su25/comment/l77oeh9/",
+        "status": "accessible",
+        "live_body_matches_archived_body": true,
+        "archived_body_sha256": "f1fa4d65c9dc350dfe19455c631ef85ce7721799e226b6dc1be19d6b798a6e60"
+      },
+      {
+        "record_index": 818,
+        "method": "Reopened original Reddit comment in authorized Chrome; rendered comment body read back",
+        "url": "https://www.reddit.com/r/SGExams/comments/1oyctmz/comment/np3qj48/",
+        "status": "accessible",
+        "live_body_matches_archived_body": true,
+        "archived_body_sha256": "7363bc724885194a937f5b16797702f57dba12e5165d334f077a37623b2b43c2"
+      },
+      {
+        "record_index": 659,
+        "method": "Public topic reopened in Chrome, native #comment10 .body checked; current Chrome auto-translates Japanese to Chinese",
+        "url": "https://girlschannel.net/topics/5217568/#comment10",
+        "status": "topic_accessible",
+        "live_body_matches_archived_body": null,
+        "live_body_note": "Translation describes finding restaurants on Tabelog, searching Instagram tags and deciding from non-influencer posts. Original Japanese matches cached public HTML anchor; no byte-exact claim about translated DOM.",
+        "source_permalink": "https://girlschannel.net/comment/5217568/10/",
+        "source_permalink_result": "HTTP 403 visible after following native comment permalink; no bypass attempted",
+        "archived_body_sha256": "1e38df1f5b655d7dd20da75c16c9c7b56632448fb3a6a495127c643c508aca67"
+      }
+    ],
+    "scope": "3 Reddit originals reopened and text matched; 1 Japanese topic accessibility check; all 345 Japanese selected reply anchors and original bodies separately checked against 14 cached public pages. Not a fresh HTTP check of every source link."
+  },
+  "semantic_review": {
+    "reviewed_records": 1034,
+    "independent_human_raters": 0,
+    "description": "全部固定样本由同一研究代理逐条阅读正文与问题语境，13 批语义编码；关键发现回读，另有固定随机 24 条二次回读。此处机械通过不等于分类准确率或人群代表性。",
+    "second_pass_indices": [
+      536,
+      935,
+      174,
+      301,
+      282,
+      649,
+      49,
+      692,
+      906,
+      691,
+      466,
+      44,
+      739,
+      33,
+      462,
+      698,
+      941,
+      667,
+      765,
+      949,
+      257,
+      318,
+      159,
+      767
+    ],
+    "second_pass_action": "691 的 easyJet 未明确为 Holidays 套餐；同品牌相关记录统一标为 easyJet / Holidays 品牌家族，原始正文与说明保留。"
+  },
+  "ui_checks": {
+    "checked_at": "2026-09-06T01:47:45.215189+00:00",
+    "ui_version": 2,
+    "status": "passed",
+    "environment": "Actual in-app browser; user existing tab 10; no viewport override",
+    "checks": [
+      {
+        "check": "scene_entry",
+        "passed": true,
+        "detail": "首页只需选择场景，默认仅显示产品检索与折叠的细分入口；不显示研究口径下拉菜单。"
+      },
+      {
+        "check": "scene_totals",
+        "passed": true,
+        "detail": "六个场景与离线重算一致：88/15、167/21、75/17、54/18、101/9、83/6（评论/讨论）。"
+      },
+      {
+        "check": "product_total",
+        "passed": true,
+        "detail": "Pinterest 总览 31 条/8帖，点开显示 31 篇证据；未点名 26/7 与问题举例 5/1 分开。"
+      },
+      {
+        "check": "legacy_slice",
+        "passed": true,
+        "detail": "限定穿搭、未点名平台后，恢复旧统计 50 条具名关联、9帖；Pinterest 26条/7帖、去最大帖后18条。"
+      },
+      {
+        "check": "progressive_filters",
+        "passed": true,
+        "detail": "细分面板可展开；灵感的具体主题仅提供有证据的旅行与穿搭。"
+      },
+      {
+        "check": "empty_recovery",
+        "passed": true,
+        "detail": "穿搭+未点名+GirlsChannel 为空；一键返回灵感总览，恢复88条/15帖并收起细分。"
+      },
+      {
+        "check": "type_and_time",
+        "passed": true,
+        "detail": "沟通的弃用/历史、2025年以来得到15条/4帖；标签使用弃用/历史而非实际使用。"
+      },
+      {
+        "check": "scene_reset",
+        "passed": true,
+        "detail": "切换场景清除先前来源、主题、提问组、类型、年份等细分条件；避免隐蔽的交叉筛选。"
+      },
+      {
+        "check": "deep_link_reload",
+        "passed": true,
+        "detail": "Instagram 全部地区链接刷新后恢复30条/12帖与全部30篇原评论；提问构成为18/7与12/5。"
+      },
+      {
+        "check": "count_display",
+        "passed": true,
+        "detail": "主表为条数与帖数，区域颜色随本图评论计数变化；0与无关联列分开显示。"
+      },
+      {
+        "check": "visual",
+        "passed": true,
+        "detail": "实际709px宽的应用内浏览器检查；六个场景一行，筛选收起后主表上移，产品列固定。"
+      },
+      {
+        "check": "errors",
+        "passed": true,
+        "detail": "所有上述实际交互后读取浏览器 error 日志为空。"
+      }
+    ],
+    "previous_version_checks": "revisions/2026-09-06-filter-simplification/ui-validation.json"
+  },
+  "limits": [
+    "固定可见回复样本，非概率调查；搜索可发现性和默认排序影响覆盖。",
+    "主比例以明确选择回答为分母，不能解释为渗透率；本论坛被提及存在来源自选。",
+    "市场语境不是已验证的用户居住地，2024 年材料不能称为 2026 年当前默认。",
+    "日本独立评论端点实测 403，改用公开话题页的评论楼层锚点；可核验的页面仍可能以后变化。"
+  ]
+}
